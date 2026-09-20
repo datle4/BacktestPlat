@@ -1,16 +1,16 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
-import { FoundationStatus } from '@/components/FoundationStatus'
+import { MarketOverview } from '@/components/MarketOverview'
 import { AppProviders } from '@/app/providers'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <FoundationStatus />,
+    element: <MarketOverview />,
   },
   {
     path: '/status',
-    element: <FoundationStatus />,
+    element: <Navigate to="/" replace />,
   },
   {
     path: '*',
@@ -25,4 +25,3 @@ export function App() {
     </AppProviders>
   )
 }
-

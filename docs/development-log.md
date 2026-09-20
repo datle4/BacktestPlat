@@ -74,3 +74,12 @@ Branch: `feature/historical-data-import`
 - Verified against PostgreSQL Docker: 7,432 stored rows, latest session 2026-09-18, zero rows after the cutoff and about 1.1 MB of table/index storage.
 - Tests cover the five configured symbols, cutoff enforcement, valid persistence and rejection of inconsistent provider data.
 - Limitation: Yahoo Finance is an external unofficial source; import requires network access and the provider may change or rate-limit requests.
+
+## Historical market data frontend
+Branch: `feature/historical-data-frontend`
+
+- Replaced the setup placeholder and remaining old-project copy with a live market-data screen backed by `/api/stocks` and `/api/stocks/{symbol}/prices`.
+- Added stock/date filters, latest close and period metrics, an accessible SVG closing-price chart, and a responsive table for the 12 latest OHLCV sessions.
+- Implemented loading, error, empty-data and invalid-range states while retaining the light/dark/system theme preference.
+- Verified with the actual PostgreSQL snapshot, plus frontend lint, three Vitest checks, production build and Playwright at 375, 768, 1024 and 1440px in both themes with automated accessibility checks.
+- Phase 1 is complete. Development stops before backtesting and mock Quant until the user explicitly starts Phase 2.

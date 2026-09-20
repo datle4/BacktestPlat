@@ -2,9 +2,10 @@
 
 Nền tảng kiểm thử chiến lược giao dịch cổ phiếu từ dữ liệu lịch sử OHLCV và tín hiệu Quant.
 
-**Trạng thái: đang thực hiện Phase 1 — web cơ bản và dữ liệu lịch sử.**
-Backend đã có lưu trữ cổ phiếu/OHLCV, API đọc và lệnh Java nhập dữ liệu lịch sử một lần.
-Giao diện dữ liệu cơ bản là phần còn lại của Phase 1; backtest và Quant chưa được triển khai.
+**Trạng thái: Phase 1 đã hoàn tất — web cơ bản và dữ liệu lịch sử đã sẵn sàng.**
+Backend có lưu trữ cổ phiếu/OHLCV, API đọc và lệnh Java nhập dữ liệu lịch sử một lần.
+Frontend có bộ lọc mã/ngày, thống kê, biểu đồ giá đóng cửa và bảng OHLCV.
+Đang dừng tại ranh giới Phase 1; backtest và Quant chưa được triển khai.
 
 ## Công nghệ
 
@@ -17,7 +18,7 @@ Giao diện dữ liệu cơ bản là phần còn lại của Phase 1; backtest 
 
 ```text
 backend/       Spring Boot, API cổ phiếu/OHLCV và importer Java
-frontend/      React, theme sáng/tối và màn hình nền BacktestPlat
+frontend/      Trang dữ liệu thị trường React, biểu đồ, bảng OHLCV và theme
 compose.yaml   PostgreSQL local và volume dữ liệu
 .env.example   Cấu hình local mẫu
 docs/          Tiến độ, nhật ký và quy trình Git
@@ -92,9 +93,9 @@ npm run dev
 ```
 
 Mở [http://localhost:5173](http://localhost:5173).
-Trang hiện tại giới thiệu đúng phạm vi BacktestPlat và cho phép đổi theme.
-Vite chuyển tiếp `/api` tới `localhost:8080` khi các API được phát triển.
-Frontend không cần API key hoặc biến môi trường tại checkpoint setup.
+Trang dữ liệu thị trường cho phép chọn mã, khoảng ngày, xem thống kê, biểu đồ đóng cửa
+và 12 phiên OHLCV gần nhất. Vite chuyển tiếp `/api` tới backend tại `localhost:8080`.
+Frontend không cần API key hoặc biến môi trường riêng.
 
 ## Biến môi trường
 

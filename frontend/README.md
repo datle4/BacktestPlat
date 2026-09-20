@@ -1,6 +1,6 @@
 # BacktestPlat frontend
 
-React + TypeScript + Vite. Setup screen only; no market or backtest features yet.
+React + TypeScript + Vite. Trang dữ liệu thị trường đọc danh sách cổ phiếu và OHLCV lịch sử từ backend.
 
 ```sh
 npm ci
@@ -17,6 +17,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The setup page supports light/dark/system themes, keyboard navigation and responsive layouts.
+Trang dữ liệu hỗ trợ chọn mã và khoảng ngày, biểu đồ giá đóng cửa, thống kê nhanh,
+bảng 12 phiên gần nhất, theme sáng/tối/hệ thống và đầy đủ trạng thái tải/lỗi/rỗng.
 End-to-end tests cover 375/768/1024/1440px, reduced motion and automated accessibility checks.
 See the [root README](../README.md) for Docker PostgreSQL and backend instructions.
