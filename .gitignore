@@ -248,3 +248,8 @@ backend/.env*
 .vscode/
 *.log
 .cache/
+
+# Private implementation learning guide (never commit the PDF or its sources)
+/output/pdf/
+/.local-guides/
+/tmp/pdfs/

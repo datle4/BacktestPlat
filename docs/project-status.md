@@ -1,6 +1,6 @@
 # MVP status
 
-Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
+Phase 1 is complete. Phase 2 was explicitly authorized on 2026-09-20 and is now in progress. Stop before Phase 3.
 
 [DONE] Project setup
 [DONE] Database setup
@@ -16,7 +16,7 @@ Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 [DONE] Compact Light/Dark dropdown, dark background grid removal and homepage copy
 [DONE] Interactive candlestick history with 1D/1W/1M/1Y, volume, crosshair and pan/zoom
 [DONE] Frontend backtest draft workspace (local save only)
-[TODO] Quant provider interface and deterministic mock
+[IN PROGRESS] Quant provider interface and deterministic mock
 [TODO] Order execution and portfolio
 [TODO] Backtest engine and performance metrics
 [TODO] Backtest result API
@@ -44,3 +44,7 @@ Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 
 Start a phase only on the user's instruction; complete its features sequentially and stop at the phase boundary.
 Daily updates and real Quant integration are outside the current web MVP completion criteria. This scope update takes precedence over their earlier requirements in `docs/workflow.md`.
+
+## Implementation learning guide
+
+After each completed feature, append its implementation walkthrough to the private PDF at `output/pdf/BacktestPlat-Implementation-Guide.pdf`. Keep the PDF, its sources in `.local-guides/`, and render intermediates outside Git. Explain purpose, flow, main classes/functions, calculation examples, tests and limitations in Vietnamese. The README is maintained in English.
