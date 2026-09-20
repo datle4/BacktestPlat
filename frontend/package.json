@@ -1,5 +1,5 @@
 {
-  "name": "vn-stock-dashboard-frontend",
+  "name": "backtestplat-frontend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -11,7 +11,6 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --max-warnings=0",
-    "lint:contract": "redocly lint ../contracts/openapi.yaml --config ../contracts/redocly.yaml",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:watch": "vitest",
