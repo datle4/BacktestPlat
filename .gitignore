@@ -216,3 +216,35 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+.DS_Store
+
+# Frontend dependencies and generated output
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+frontend/*.tsbuildinfo
+frontend/playwright-report/
+frontend/test-results/
+
+# Backend build output
+backend/target/
+
+# Generated API clients and reports
+frontend/src/generated/
+reports/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+frontend/.env*
+!frontend/.env.example
+backend/.env*
+!backend/.env.example
+
+# Editor and tool caches
+.idea/
+.vscode/
+*.log
+.cache/
