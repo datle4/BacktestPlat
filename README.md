@@ -146,12 +146,23 @@ Dữ liệu OHLCV → Quant provider → BUY / SELL / HOLD
 Quant chỉ quyết định tín hiệu. Backend quyết định phiên khớp, giá, số lượng, phí,
 tiền mặt và vị thế. Tín hiệu sau phiên T khớp tại OPEN của phiên tiếp theo **có trong dữ liệu**.
 Cặp `stock_id + trading_date` sẽ có ràng buộc unique và ingestion sẽ idempotent.
-Mock Quant xác định sẽ được làm trước; HTTP Quant adapter theo sau.
+Mock Quant xác định sẽ được làm trước; HTTP Quant adapter chờ code/API của bạn cộng tác và yêu cầu tích hợp sau.
 
 Chưa có cấu hình Quant, hướng dẫn chạy backtest, biểu đồ vốn hoặc lịch sử giao dịch.
 Các mục này sẽ được bổ sung khi tính năng tương ứng được triển khai và kiểm thử.
 Compose hiện chỉ chạy database; đóng gói toàn bộ ứng dụng bằng Docker thuộc giai đoạn sau.
 Không triển khai authentication, user management, Redis, Kafka hoặc microservices trong MVP này.
+
+## Phạm vi dữ liệu hiện tại
+
+Dùng bộ dữ liệu lịch sử cố định đến hết **20/09/2026** (múi giờ Việt Nam), chỉ gồm
+các phiên đã hoàn tất và có dữ liệu từ nguồn được chọn. Mốc này không tự tăng theo ngày mở ứng dụng.
+Chưa tải dữ liệu ở checkpoint setup; nguồn dữ liệu, danh sách mã và ngày bắt đầu lịch sử sẽ được thống nhất khi bắt đầu phase 1.
+
+Phạm vi hiện tại chỉ có nhập dữ liệu lịch sử một lần, **chưa có scheduler hằng ngày,
+tải bù lúc khởi động hoặc cập nhật nền**. Khi cần cập nhật thêm, sẽ thiết kế tiếp theo yêu cầu.
+Web MVP chạy bằng Quant giả lập; Quant thật được tích hợp sau khi có code/API từ bạn cộng tác.
+Các điều chỉnh này thay thế yêu cầu cập nhật hằng ngày và tích hợp Quant thật trong phạm vi MVP trước đó.
 
 ## Tiếp tục phát triển
 

@@ -28,3 +28,12 @@ Branch: `feature/frontend-foundation`
 - Validation: frontend lint, 3 unit tests, production build; Playwright responsive/theme/axe checks at four viewport widths.
 - Limitation: setup UI only; no business features. Stop here per user instruction, pending model choice and an explicit request to continue.
 - GitHub connector returned HTTP 403 for PR creation; setup branches are preserved and merged through Git instead.
+
+## Fixed historical data scope
+Branch: `docs/static-data-scope`
+
+- Recorded the user's revised scope: a one-time historical dataset through 2026-09-20, with completed available trading sessions only.
+- Deferred daily scheduling, automatic catch-up and real Quant integration; documented the three phase boundaries and mock-first web MVP.
+- Updated README, project status and the setup screen's planned-data description. The original workflow remains as historical context, with current scope explicitly overriding the deferred requirements.
+- Validation: documentation diff review, frontend production build and existing unit tests.
+- No market data fetched and no business feature implemented; still awaiting the user's request to start Phase 1.
