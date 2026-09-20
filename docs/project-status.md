@@ -1,7 +1,9 @@
 # MVP status
 
+Setup checkpoint only. Per user instruction, stop before business features and wait for model selection.
+
 [DONE] Project setup
-[TODO] Database setup
+[DONE] Database setup
 [TODO] Stock storage
 [TODO] Historical price storage and API
 [TODO] Market data provider and daily scheduler

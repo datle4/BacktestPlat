@@ -33,3 +33,21 @@ Mỗi tính năng có nhánh riêng, được kiểm thử trước khi merge v�
 Tín hiệu sau phiên T chỉ được khớp tại OPEN của phiên tiếp theo có trong dữ liệu.
 Không khớp vào cùng phiên; không tự cộng một ngày để suy ra phiên giao dịch.
 MVP không có đăng nhập hoặc quản lý người dùng.
+
+## Database và backend
+
+```sh
+cp .env.example .env
+docker compose up -d db
+cd backend
+./mvnw spring-boot:run
+```
+
+Database local: `localhost:55432/backtestplat`. Giá trị mặc định dành cho máy phát triển.
+Khi đổi `.env`, export các biến trước khi chạy backend: `set -a; . ./.env; set +a`.
+Flyway áp dụng migration khi khởi động. Test mặc định dùng H2; để kiểm tra PostgreSQL:
+
+```sh
+cd backend
+TEST_DB_URL=jdbc:postgresql://localhost:55432/backtestplat TEST_DB_USER=backtestplat TEST_DB_PASSWORD=local-backtestplat ./mvnw test
+```

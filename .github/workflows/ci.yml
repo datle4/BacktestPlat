@@ -11,8 +11,21 @@ concurrency:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.10-alpine
+        env:
+          POSTGRES_DB: backtestplat
+          POSTGRES_USER: backtestplat
+          POSTGRES_PASSWORD: ci-only-password
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U backtestplat -d backtestplat"
+          --health-interval 5s --health-timeout 3s --health-retries 10
     steps:
       - uses: actions/checkout@v4
+      - name: Validate Docker Compose
+        run: docker compose --env-file .env.example config --quiet
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -21,6 +34,13 @@ jobs:
           cache-dependency-path: backend/pom.xml
       - run: ./mvnw --batch-mode --no-transfer-progress verify
         working-directory: backend
+      - name: Verify PostgreSQL integration
+        working-directory: backend
+        env:
+          TEST_DB_URL: jdbc:postgresql://localhost:5432/backtestplat
+          TEST_DB_USER: backtestplat
+          TEST_DB_PASSWORD: ci-only-password
+        run: ./mvnw --batch-mode --no-transfer-progress test
   frontend:
     runs-on: ubuntu-latest
     defaults:
