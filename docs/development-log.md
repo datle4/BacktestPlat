@@ -157,3 +157,13 @@ Branch: `feature/backtest-result-api`
 - Validation: 22 H2 backend tests, including full POST/GET snapshot equality after changing source prices and invalid-request cases.
 - README now documents the API contract; private PDF explains controller/service/repository flow.
 - No authentication, run listing, retention policy or real Quant adapter is added.
+
+## Backtest report interface
+
+Branch: `feature/backtest-results-ui`
+
+- Connected run form to POST/GET, retained local drafts, added pending/error states and immutable result deep links.
+- Added metrics, keyboard/pointer equity inspection, end-of-run positions and paginated filled/skipped order history using existing theme tokens.
+- Validation: lint, 11 Vitest tests, production build, and 32 Playwright checks across four viewports, both themes and axe. The backend API also passed all 22 tests against Docker PostgreSQL.
+- A theme-transition timing issue in the accessibility test was resolved by awaiting active animations before measuring contrast.
+- Private PDF extended with React Query flow, components and chart/table interactions.

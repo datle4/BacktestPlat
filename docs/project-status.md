@@ -20,10 +20,10 @@ Phase 1 is complete. Phase 2 was explicitly authorized on 2026-09-20 and is now 
 [DONE] Order execution and portfolio
 [DONE] Backtest engine and performance metrics
 [DONE] Backtest result API
-[IN PROGRESS] Connect frontend backtest form to simulation API
-[TODO] Result dashboard and equity curve
-[TODO] Trade history
-[TODO] Docker application stack
+[DONE] Connect frontend backtest form to simulation API
+[DONE] Result dashboard and equity curve
+[DONE] Trade history
+[IN PROGRESS] Docker application stack
 [TODO] Final integration testing
 
 ## Current scope — updated 2026-09-20

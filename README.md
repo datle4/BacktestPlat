@@ -87,7 +87,7 @@ Open [http://localhost:5173](http://localhost:5173).
 
 - `/`: tracked-market overview, breadth, volume, price chart and the five most active stocks.
 - `/stocks`: search and sort stocks, inspect candlestick history and the latest 12 daily OHLCV rows. Deep links such as `/stocks?symbol=FPT` are supported.
-- `/backtest`: prepare and save settings locally. Simulation and saved results are being implemented in Phase 2.
+- `/backtest`: configure a mock simulation, run it and inspect metrics, equity, positions and filled/skipped orders. Save a local draft independently. Results can be reopened with `/backtest?run=<id>`.
 
 The Vietnamese UI uses self-hosted Inter, responsive layouts and persistent Light/Dark preferences. The compact theme menu opens below its button. Both themes retain blue/violet gradients; dark mode has no decorative background grid.
 
@@ -150,6 +150,16 @@ docker compose --env-file .env.example config --quiet
 ```
 
 CI runs on pull requests and pushes to `main`, `feature/*`, `fix/*` and `test/*`. It validates Maven builds, H2/PostgreSQL tests, Compose configuration and frontend lint/unit/build/browser checks.
+
+## Running a backtest
+
+1. Start the database/backend/frontend and ensure historical prices have been imported.
+2. Open `/backtest`, select a stock, date range, initial capital and fee percentage per side.
+3. Click **Chạy backtest**. The backend simulates and saves the report; the URL gains a `run` ID.
+4. Inspect return, drawdown, completed-trade win rate, equity and the order log. Use the curve slider to inspect any session, including with keyboard Home/End.
+5. Keep the result URL to reopen it later. Editing the form does not change an existing report. **Lưu cấu hình nháp** only saves input settings in this browser.
+
+The default provider is a plumbing mock, not the collaborator's Quant AI. Reports explicitly state the simulation assumptions.
 
 ## Business architecture
 
