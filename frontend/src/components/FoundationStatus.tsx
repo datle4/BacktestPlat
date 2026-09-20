@@ -6,7 +6,7 @@ import {
 } from '@/store/usePreferencesStore'
 
 const stages = [
-  { title: 'Dữ liệu thị trường', description: 'Lưu cổ phiếu và giá OHLCV theo từng phiên, cập nhật dữ liệu hằng ngày.' },
+  { title: 'Dữ liệu thị trường', description: 'Lưu cổ phiếu và giá OHLCV lịch sử đến 20/09/2026, chỉ gồm các phiên đã hoàn tất.' },
   { title: 'Tín hiệu & mô phỏng', description: 'Nhận BUY / SELL / HOLD từ Quant, khớp lệnh tại giá mở cửa của phiên tiếp theo.' },
   { title: 'Kết quả & đánh giá', description: 'Theo dõi tiền mặt, vị thế, hiệu suất, đường vốn và lịch sử giao dịch.' },
 ]
