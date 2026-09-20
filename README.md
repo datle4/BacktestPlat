@@ -2,7 +2,7 @@
 
 A stock strategy backtesting workspace built around historical OHLCV data and replaceable Quant signals.
 
-**Status: Phase 1 is complete; Phase 2 is in progress.** The market overview, stock directory, historical charts and backtest draft screen are available. Phase 2 adds a deterministic mock Quant provider, simulation engine, execution and portfolio accounting, saved results, performance charts and trade history. Real Quant integration belongs to Phase 3.
+**Status: Phases 1 and 2 are complete.** The market overview, historical charts and complete mock backtesting flow are available: next-session execution, portfolio/fee accounting, saved reports, equity curves and order history. The application also runs as a Docker stack. Real Quant integration belongs to Phase 3 and has not started.
 
 ## Technology
 
@@ -180,7 +180,15 @@ From the repository root:
 docker compose --env-file .env.example config --quiet
 ```
 
-CI runs on pull requests and pushes to `main`, `feature/*`, `fix/*` and `test/*`. It validates Maven builds, H2/PostgreSQL tests, Compose configuration and frontend lint/unit/build/browser checks.
+For the real frontend/API/PostgreSQL integration test, start the Docker application with imported FPT prices, then run from `frontend/`:
+
+```sh
+npm run test:e2e:integration
+```
+
+This test uses the actual application (no API mocks) and creates one saved backtest. `APP_BASE_URL` overrides the default `http://127.0.0.1:8088`. It checks stored-open execution, accounting reconciliation, persistence, both themes and accessibility. CI instead seeds a fresh disposable database using `frontend/integration/fixture.sql`; do not load that synthetic fixture into your historical snapshot.
+
+CI runs on pull requests and pushes to `main`, `feature/*`, `fix/*` and `test/*`. It validates Maven builds, H2/PostgreSQL tests, Compose configuration and frontend lint/unit/build/browser checks. A separate application integration job builds the Docker images, starts the stack, seeds isolated test data and runs the real browser-to-database flow.
 
 ## Running a backtest
 
