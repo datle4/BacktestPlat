@@ -40,24 +40,29 @@ class HistoricalDataImportServiceTests {
     }
 
     @Test
-    void importsFiveConfiguredVietnameseStocksThroughTheFixedCutoff() {
+    void importsFifteenConfiguredVietnameseStocksThroughTheFixedCutoffIdempotently() {
         LocalDate from = LocalDate.of(2026, 9, 17);
         LocalDate cutoff = LocalDate.of(2026, 9, 20);
         provider.result = List.of(bar(LocalDate.of(2026, 9, 18)));
 
         HistoricalDataImportService.ImportSummary result = service.importFixedHistory(from, cutoff);
 
-        assertThat(result.stocks()).isEqualTo(5);
-        assertThat(result.rows()).isEqualTo(5);
+        assertThat(result.stocks()).isEqualTo(15);
+        assertThat(result.rows()).isEqualTo(15);
         assertThat(result.skippedRows()).isZero();
-        assertThat(provider.requests).hasSize(5)
+        assertThat(provider.requests).hasSize(15)
                 .allSatisfy(request -> {
                     assertThat(request.from()).isEqualTo(from);
                     assertThat(request.to()).isEqualTo(cutoff);
                     assertThat(request.providerSymbol()).endsWith(".VN");
                 });
         assertThat(stocks.findAll()).extracting("symbol")
-                .containsExactly("FPT", "HPG", "TCB", "VIC", "VNM");
+                .containsExactly("ACB", "FPT", "GAS", "HPG", "MBB", "MSN", "MWG", "PLX",
+                        "PNJ", "SSI", "TCB", "VCB", "VHM", "VIC", "VNM");
+        assertThat(provider.requests).extracting(RecordingProvider.Request::providerSymbol)
+                .doesNotHaveDuplicates();
+        service.importFixedHistory(from, cutoff);
+        assertThat(stocks.findAll()).hasSize(15);
         assertThat(stocks.findAll())
                 .allSatisfy(stock -> assertThat(prices.countByStock(stock.id())).isEqualTo(1));
     }
@@ -73,7 +78,7 @@ class HistoricalDataImportServiceTests {
                 LocalDate.of(2026, 9, 1), cutoff);
 
         assertThat(result.rows()).isZero();
-        assertThat(result.skippedRows()).isEqualTo(5);
+        assertThat(result.skippedRows()).isEqualTo(15);
         assertThat(stocks.findAll()).allSatisfy(stock ->
                 assertThat(prices.countByStock(stock.id())).isZero());
     }

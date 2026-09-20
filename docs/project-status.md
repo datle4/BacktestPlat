@@ -9,6 +9,7 @@ Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 [DONE] Historical price storage
 [DONE] Historical price API
 [DONE] One-time historical data import through 2026-09-20
+[DONE] Expanded historical dataset from 5 to 15 HOSE symbols
 [DONE] Basic historical market data frontend
 [DONE] Three-page UI redesign, Inter typography and stock search/sort
 [DONE] Frontend backtest draft workspace (local save only)
@@ -29,8 +30,8 @@ Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 - The cutoff is fixed; it does not advance when the application is opened later.
 - No daily scheduler, startup catch-up, or background refresh in the current scope. Design future updates only when requested.
 - Build the web application with a deterministic mock Quant provider first. The real Quant implementation will be supplied by the user's collaborator later.
-- The Java importer uses `yfinance4j` with Yahoo Finance for FPT, HPG, TCB, VIC and VNM, starting at 2021-01-01.
-- Provider rows with missing or internally inconsistent OHLCV are skipped and logged rather than altered. The verified local snapshot contains 7,432 rows through the last completed session on 2026-09-18 and occupies about 1.1 MB for `daily_prices`.
+- The Java importer uses `yfinance4j` with Yahoo Finance for ACB, FPT, GAS, HPG, MBB, MSN, MWG, PLX, PNJ, SSI, TCB, VCB, VHM, VIC and VNM, starting at 2021-01-01.
+- Provider rows with missing or internally inconsistent OHLCV are skipped and logged rather than altered. The verified local snapshot contains 22,296 rows through 2026-09-18, none beyond the cutoff, and occupies 3,384 kB for `daily_prices` including indexes. The expanded import skipped 15 inconsistent provider rows.
 
 ## Phase boundaries
 

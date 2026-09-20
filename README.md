@@ -68,8 +68,8 @@ Backend chạy tại `http://localhost:8080`. Các endpoint hiện có:
 
 ### 3. Nhập dữ liệu lịch sử một lần bằng Java
 
-Importer dùng thư viện Java `yfinance4j`, lấy dữ liệu Yahoo Finance cho `FPT.VN`,
-`HPG.VN`, `TCB.VN`, `VIC.VN` và `VNM.VN`, rồi lưu vào PostgreSQL Docker.
+Importer dùng thư viện Java `yfinance4j`, lấy dữ liệu Yahoo Finance cho 15 mã HOSE
+(mã nguồn có hậu tố `.VN`), rồi lưu vào PostgreSQL Docker.
 Sau khi database đã chạy và biến môi trường đã được export như bước 2:
 
 ```sh
@@ -185,7 +185,14 @@ Không triển khai authentication, user management, Redis, Kafka hoặc microse
 
 Dùng bộ dữ liệu lịch sử cố định đến hết **20/09/2026** (múi giờ Việt Nam), chỉ gồm
 các phiên đã hoàn tất và có dữ liệu từ nguồn. Mốc này không tự tăng theo ngày mở ứng dụng.
-Mặc định importer tải 5 mã HOSE `FPT`, `HPG`, `TCB`, `VIC`, `VNM` từ 01/01/2021.
+Mặc định importer tải 15 mã HOSE từ 01/01/2021:
+`ACB`, `FPT`, `GAS`, `HPG`, `MBB`, `MSN`, `MWG`, `PLX`, `PNJ`, `SSI`, `TCB`, `VCB`, `VHM`, `VIC`, `VNM`.
+Bộ theo dõi có ngân hàng, công nghệ, thép, năng lượng, tiêu dùng, bán lẻ, chứng khoán và bất động sản;
+đây không phải danh sách đầy đủ của thị trường hoặc khuyến nghị đầu tư.
+
+Snapshot local đã kiểm tra: **22.296 bản ghi**, phiên mới nhất **18/09/2026**;
+bảng giá và index khoảng **3,3 MB** (không gồm image Docker, WAL và các thành phần khác).
+15 bản ghi nguồn có OHLCV mâu thuẫn đã được ghi cảnh báo và bỏ qua.
 
 Phạm vi hiện tại chỉ có nhập dữ liệu lịch sử một lần, **chưa có scheduler hằng ngày,
 tải bù lúc khởi động hoặc cập nhật nền**. Khi cần cập nhật thêm, sẽ thiết kế tiếp theo yêu cầu.
