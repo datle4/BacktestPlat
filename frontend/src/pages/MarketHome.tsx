@@ -64,7 +64,7 @@ export function MarketHome() {
       <div className="page-heading">
         <div>
           <h1>Nhịp thị trường</h1>
-          <p>Một góc nhìn tổng quan, trước khi đi sâu vào từng cổ phiếu.</p>
+          <p>Tổng quan thị trường</p>
         </div>
         <span className="snapshot">
           <CalendarDays size={15} aria-hidden="true" />

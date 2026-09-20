@@ -8,15 +8,9 @@ import '@/styles/index.css'
 const rootElement = document.getElementById('root')
 
 const savedTheme = usePreferencesStore.getState().theme
-const resolvedTheme =
-  savedTheme === 'system'
-    ? window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'
-    : savedTheme
 
-document.documentElement.dataset.theme = resolvedTheme
-document.documentElement.style.colorScheme = resolvedTheme
+document.documentElement.dataset.theme = savedTheme
+document.documentElement.style.colorScheme = savedTheme
 
 if (!rootElement) {
   throw new Error('Không tìm thấy phần tử #root để khởi tạo ứng dụng.')

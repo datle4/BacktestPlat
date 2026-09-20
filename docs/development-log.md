@@ -109,3 +109,14 @@ Branch: `feature/scifi-gradient-themes`
 - Added shared theme-specific linear gradients across surfaces, navigation selection, primary actions and charts, with a fine background grid and restrained static glow in dark mode. Kept gain/loss colors distinct and typography solid for readability.
 - Updated `frontend/src/styles/index.css`, SVG gradients in `PriceChart.tsx`, browser theme colors and the design-system record. Layout, data and routes are unchanged.
 - Validation: lint, production build and eight Playwright checks across all three pages, both themes and 375/768/1024/1440px. All automated accessibility, overflow and reduced-motion checks pass. Visually reviewed both desktop themes and mobile dark backtest.
+
+## Candlestick history and theme controls
+Branch: `feature/candlestick-history-controls`
+
+- Replaced the native theme select with a compact bordered Light/Dark dropdown positioned below the trigger, with arrow/Home/End navigation, Escape focus restoration and outside dismissal. Stored System preferences now resolve to Light.
+- Removed the decorative grid from dark mode while retaining every existing gradient color; updated the homepage subtitle to “Tổng quan thị trường”.
+- Added daily, Monday-based weekly, monthly and yearly OHLCV aggregation in `frontend/src/utils/candles.ts`. Partial buckets retain their actual covered dates; missing sessions are not invented.
+- Historical details use a lazy-loaded TradingView Lightweight Charts renderer with a right-hand price scale, a separate volume pane, crosshair OHLCV, mouse/touch pan and zoom, reset/navigation controls and accessible per-candle inspection. Theme changes update the chart in place. The homepage price line remains unchanged.
+- Design references: the official Binance TradingView guide and TradingView chart examples; links are recorded in the design system. Library license and attribution are included in the frontend.
+- Validation: frontend lint, 11 Vitest checks, production build and 20 Playwright checks at 375/768/1024/1440px, covering themes, menu placement, legacy preferences, aggregation, frame changes, zoom, pan, keyboard inspection, accessibility, overflow and existing routes. Inspected FPT daily/weekly data using the already-running local backend and reviewed light/dark browser captures.
+- Limitations: fixed historical snapshot, no streaming quotes or additional ingestion. The selected date range limits aggregation; 1Y may contain one candle until the user expands the start date. No backtest engine or Quant work was started.

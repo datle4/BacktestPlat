@@ -4,15 +4,10 @@ import {
   FlaskConical,
   LayoutDashboard,
   List,
-  Moon,
-  Sun,
 } from 'lucide-react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
-import {
-  usePreferencesStore,
-  type ThemePreference,
-} from '@/store/usePreferencesStore'
+import { ThemeControl } from '@/components/ThemeControl'
 
 const links = [
   { to: '/', title: 'Thị trường', icon: LayoutDashboard },
@@ -24,7 +19,6 @@ export function AppShell() {
   const { pathname } = useLocation()
   const lastPath = useRef(pathname)
   const main = useRef<HTMLElement>(null)
-  const { theme, setTheme } = usePreferencesStore()
   useEffect(() => {
     document.title = `${links.find((item) => item.to === pathname)?.title ?? 'Cổ phiếu'} · BacktestPlat`
     if (lastPath.current !== pathname) {
@@ -91,24 +85,7 @@ export function AppShell() {
               {links.find((item) => item.to === pathname)?.title ?? 'Cổ phiếu'}
             </strong>
           </span>
-          <label className="theme-control">
-            {theme === 'dark' ? (
-              <Moon size={16} aria-hidden="true" />
-            ) : (
-              <Sun size={16} aria-hidden="true" />
-            )}
-            <span className="sr-only">Giao diện</span>
-            <select
-              value={theme}
-              onChange={(event) =>
-                setTheme(event.target.value as ThemePreference)
-              }
-            >
-              <option value="system">Hệ thống</option>
-              <option value="light">Sáng</option>
-              <option value="dark">Tối</option>
-            </select>
-          </label>
+          <ThemeControl />
         </header>
         <main id="main-content" className="page" tabIndex={-1} ref={main}>
           <Outlet />

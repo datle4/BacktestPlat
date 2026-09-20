@@ -9,6 +9,9 @@ import { MarketHome } from '@/pages/MarketHome'
 import { StocksPage } from '@/pages/StocksPage'
 import { BacktestPage } from '@/pages/BacktestPage'
 
+// Canvas rendering and gestures are covered in real-browser tests.
+vi.mock('@/components/TradingChart', () => ({ TradingChart: () => <div /> }))
+
 const stocks = [
   { id: 1, symbol: 'FPT', name: 'FPT Corporation', exchange: 'HOSE' },
   { id: 2, symbol: 'VNM', name: 'Vinamilk', exchange: 'HOSE' },
@@ -97,6 +100,25 @@ describe('Market workspace', () => {
       '/api/stocks/VNM/prices?from=2026-09-01&to=2026-09-20',
       expect.anything(),
     )
+  })
+
+  it('switches historical candle intervals without another fetch and exposes aggregated OHLCV', async () => {
+    const user = userEvent.setup()
+    const { container } = setup('/stocks?symbol=FPT')
+    await screen.findByRole('img', { name: 'Biểu đồ nến FPT 1D' })
+    const requestCount = vi.mocked(fetch).mock.calls.length
+    await user.click(screen.getByRole('button', { name: '1W' }))
+    expect(
+      screen.getByRole('img', { name: 'Biểu đồ nến FPT 1W' }),
+    ).toBeInTheDocument()
+    const readout = screen.getByRole('group', { name: 'Thông tin nến' })
+    expect(readout).toHaveTextContent('17/09/2026 – 18/09/2026')
+    expect(readout).toHaveTextContent('2 phiên')
+    expect(readout).toHaveTextContent('3.300.000')
+    await user.click(screen.getByText('Xem dữ liệu từng nến'))
+    expect(screen.getByRole('slider', { name: 'Chọn nến' })).toBeDisabled()
+    expect(vi.mocked(fetch).mock.calls).toHaveLength(requestCount)
+    expect(await axe(container)).toHaveNoViolations()
   })
 
   it('navigates between the three pages and saves a backtest draft without running it', async () => {
