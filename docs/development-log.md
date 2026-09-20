@@ -120,3 +120,10 @@ Branch: `feature/candlestick-history-controls`
 - Design references: the official Binance TradingView guide and TradingView chart examples; links are recorded in the design system. Library license and attribution are included in the frontend.
 - Validation: frontend lint, 11 Vitest checks, production build and 20 Playwright checks at 375/768/1024/1440px, covering themes, menu placement, legacy preferences, aggregation, frame changes, zoom, pan, keyboard inspection, accessibility, overflow and existing routes. Inspected FPT daily/weekly data using the already-running local backend and reviewed light/dark browser captures.
 - Limitations: fixed historical snapshot, no streaming quotes or additional ingestion. The selected date range limits aggregation; 1Y may contain one candle until the user expands the start date. No backtest engine or Quant work was started.
+
+## Phase 2 documentation
+Branch: `feature/phase-two-documentation`
+
+- Translated the root README into English while preserving local Docker/import/test instructions.
+- Recorded Phase 2 authorization and the incremental, private Vietnamese implementation-guide workflow. Added explicit Git exclusions for the PDF, its editable sources and render intermediates.
+- Validation: reviewed setup commands against current configuration and checked the Git exclusions. No application behavior changed.
