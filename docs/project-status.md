@@ -12,6 +12,7 @@ Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 [DONE] Expanded historical dataset from 5 to 15 HOSE symbols
 [DONE] Basic historical market data frontend
 [DONE] Three-page UI redesign, Inter typography and stock search/sort
+[DONE] Sci-fi dark and light gradient color themes
 [DONE] Frontend backtest draft workspace (local save only)
 [TODO] Quant provider interface and deterministic mock
 [TODO] Order execution and portfolio

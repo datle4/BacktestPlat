@@ -3,7 +3,9 @@
 User-requested redesign: three primary destinations — market overview, stock directory, backtest workspace. UI/UX Pro Max searches informed the flat surfaces, semantic stock colors and readable sans typography. Generated marketing layouts and Fira recommendations do not fit this request and are not adopted. React-specific search returned no match; reuse existing Router/Query patterns.
 
 - Self-host Inter Variable, including Latin and Vietnamese subsets. Body 16px, compact table text 13px, tabular numerals. No monospace display type.
-- Off-white workspace, white panels, ink headings, restrained teal accents. Dark theme has equivalent contrast.
+- Light theme: ice-blue to lavender workspace, near-white blended panels, navy text and blue/violet accents. Keep positive/negative data colors green/red.
+- Dark theme: sci-fi research console with midnight navy surfaces, ice-cyan interaction/chart accents and lavender secondary details. Use subtle static ambient gradients, fine grid lines and restrained glow; keep text crisp and positive/negative colors green/rose. Financial Dashboard search informed the dark surface hierarchy; cyan/lavender styling follows the user's explicit sci-fi direction. Preserve contrast and reduced-motion behavior.
+- Both themes use semantic gradient tokens for surfaces, selected navigation, primary actions and volume bars. Price lines blend blue/cyan into violet using an SVG gradient with user-space coordinates so flat series remain visible. Ambient effects are static; typography stays solid-color for legibility.
 - Desktop left navigation; mobile three-item navigation in document flow. Active route is explicit; URLs are shareable.
 - Home describes only stored symbols, never labels a subset statistic VN-Index or whole-market data. Aggregate only matching latest dates; rank the top five by volume. No invented news, live prices or performance.
 - Stock directory supports search, sorting and deep-linked historical detail.
