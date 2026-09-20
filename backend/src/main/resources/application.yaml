@@ -11,3 +11,6 @@ server:
   port: ${PORT:8080}
   error:
     include-message: never
+app:
+  market-data:
+    cutoff: ${MARKET_DATA_CUTOFF:2026-09-20}
