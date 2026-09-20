@@ -12,10 +12,10 @@ describe('App foundation', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /một nền móng rõ ràng cho dữ liệu thị trường/i,
+        name: /nền tảng backtest cổ phiếu/i,
       }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('status')).toHaveTextContent('Frontend khởi tạo thành công')
+    expect(screen.getByRole('status')).toHaveTextContent('Màn hình nền đã sẵn sàng')
     expect(screen.getByRole('link', { name: /bỏ qua tới nội dung chính/i })).toHaveAttribute(
       'href',
       '#main-content',
@@ -29,7 +29,7 @@ describe('App foundation', () => {
     await user.selectOptions(screen.getByLabelText(/giao diện/i), 'dark')
 
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
-    expect(window.localStorage.getItem('vn-stock-preferences')).toContain('dark')
+    expect(window.localStorage.getItem('backtestplat-preferences')).toContain('dark')
   })
 
   it('has no detectable accessibility violations at the Foundation checkpoint', async () => {

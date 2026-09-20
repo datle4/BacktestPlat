@@ -17,3 +17,14 @@ Branch: `feature/database-setup`
 - Tests: Spring context and actual SQL connection on H2 and Docker PostgreSQL.
 - Decision: port 55432 avoids the existing local PostgreSQL container; tests can target either database.
 - Limitations: local development database credentials; business migrations follow with each feature.
+
+## Frontend foundation cleanup
+Branch: `feature/frontend-foundation`
+
+- Replaced inherited VN Stock Dashboard copy with a BacktestPlat setup screen and explicitly pending MVP scope.
+- Removed stale OAuth proxy routes, demo environment flags and unused sidebar preferences. Retained React, existing palette/fonts and accessible theme controls.
+- Rewrote root/frontend READMEs with actual Docker, database, backend, frontend and verification commands.
+- Files: frontend setup component/styles/tests, Vite/nginx configuration, READMEs and project status.
+- Validation: frontend lint, 3 unit tests, production build; Playwright responsive/theme/axe checks at four viewport widths.
+- Limitation: setup UI only; no business features. Stop here per user instruction, pending model choice and an explicit request to continue.
+- GitHub connector returned HTTP 403 for PR creation; setup branches are preserved and merged through Git instead.
