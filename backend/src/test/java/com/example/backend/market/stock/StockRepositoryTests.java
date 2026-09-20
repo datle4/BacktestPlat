@@ -1,7 +1,9 @@
 package com.example.backend.market.stock;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.example.backend.TestDatabaseCleaner.clearMarketData;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 class StockRepositoryTests {
     @Autowired StockRepository stocks;
     @Autowired JdbcTemplate jdbc;
+
+    @BeforeEach
+    void clearExistingData() {
+        clearMarketData(jdbc);
+    }
 
     @Test
     void upsertNormalizesSymbolAndUpdatesMetadataWithoutDuplicating() {
@@ -34,4 +41,3 @@ class StockRepositoryTests {
         assertThat(stocks.findAll()).extracting(Stock::symbol).containsExactly("FPT", "VNM");
     }
 }
-

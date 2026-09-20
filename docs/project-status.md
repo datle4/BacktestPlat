@@ -1,6 +1,6 @@
 # MVP status
 
-Setup checkpoint only. Per user instruction, stop before business features and wait for model selection.
+Phase 1 is active. Complete the basic historical-data web experience, then stop before Phase 2.
 
 [DONE] Project setup
 [DONE] Database setup
@@ -8,7 +8,8 @@ Setup checkpoint only. Per user instruction, stop before business features and w
 [DONE] Stock storage
 [DONE] Historical price storage
 [DONE] Historical price API
-[TODO] One-time historical data import through 2026-09-20
+[DONE] One-time historical data import through 2026-09-20
+[TODO] Basic historical market data frontend
 [TODO] Quant provider interface and deterministic mock
 [TODO] Order execution and portfolio
 [TODO] Backtest engine and performance metrics
@@ -26,7 +27,8 @@ Setup checkpoint only. Per user instruction, stop before business features and w
 - The cutoff is fixed; it does not advance when the application is opened later.
 - No daily scheduler, startup catch-up, or background refresh in the current scope. Design future updates only when requested.
 - Build the web application with a deterministic mock Quant provider first. The real Quant implementation will be supplied by the user's collaborator later.
-- Data source, symbols and historical start date remain to be agreed when Phase 1 is requested. No market data has been downloaded at the setup checkpoint.
+- The Java importer uses `yfinance4j` with Yahoo Finance for FPT, HPG, TCB, VIC and VNM, starting at 2021-01-01.
+- Provider rows with missing or internally inconsistent OHLCV are skipped and logged rather than altered. The verified local snapshot contains 7,432 rows through the last completed session on 2026-09-18 and occupies about 1.1 MB for `daily_prices`.
 
 ## Phase boundaries
 
