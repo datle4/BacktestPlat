@@ -56,12 +56,23 @@ export function PriceChart({
             preserveAspectRatio="none"
           >
             <defs>
-              <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id={`${id}-stroke`}
+                gradientUnits="userSpaceOnUse"
+                x1="0"
+                y1="0"
+                x2="100"
+                y2="0"
+              >
+                <stop offset="0%" stopColor="var(--accent)" />
+                <stop offset="100%" stopColor="var(--accent-secondary)" />
+              </linearGradient>
+              <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor="var(--accent)" stopOpacity=".18" />
                 <stop
                   offset="100%"
-                  stopColor="var(--accent)"
-                  stopOpacity=".01"
+                  stopColor="var(--accent-secondary)"
+                  stopOpacity=".04"
                 />
               </linearGradient>
             </defs>
@@ -74,12 +85,14 @@ export function PriceChart({
             {prices.length > 1 ? (
               <polyline
                 className="chart-line"
+                stroke={`url(#${id}-stroke)`}
                 points={points}
                 vectorEffect="non-scaling-stroke"
               />
             ) : (
               <line
                 className="chart-line"
+                stroke={`url(#${id}-stroke)`}
                 x1="48"
                 x2="52"
                 y1={y(last.close)}

@@ -98,6 +98,7 @@ Mở [http://localhost:5173](http://localhost:5173).
 - `/backtest`: nhập cổ phiếu, ngày, vốn và phí rồi lưu cấu hình nháp trong trình duyệt. Chưa chạy mô phỏng hoặc tạo kết quả; engine thuộc Phase 2.
 
 Giao diện dùng Inter tự host có ký tự tiếng Việt, hỗ trợ màn hình nhỏ và theme sáng/tối/hệ thống.
+Hai theme dùng gradient xanh–tím: sáng xanh băng/lavender, tối xanh đen/cyan theo hướng sci-fi.
 Số liệu trang chủ chỉ đại diện nhóm mã có dữ liệu, không phải VN-Index hoặc toàn thị trường;
 thống kê phiên mới nhất chỉ gộp các mã cùng ngày. Không có tin tức hoặc giá trực tiếp.
 Vite chuyển tiếp `/api` tới backend tại `localhost:8080`.

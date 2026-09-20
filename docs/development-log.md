@@ -101,3 +101,11 @@ Branch: `feature/expanded-stock-universe`
 - Validation: Maven verify, 11 passing tests including the complete 15-symbol catalog, provider suffix/range validation, duplicate-free catalog and idempotent reruns. Ran the actual importer against PostgreSQL Docker and inspected the three-page UI with real data.
 - Result: 22,296 price rows, all 15 symbols populated through 2026-09-18, zero rows beyond cutoff, 3,384 kB for the price table and indexes. The import logged and skipped 15 inconsistent provider rows; no replacements were invented.
 - Limitation: Yahoo coverage and adjusted historical prices depend on the source. This is a tracked subset, not complete exchange coverage.
+
+## Sci-fi gradient themes
+Branch: `feature/scifi-gradient-themes`
+
+- Updated both themes at the user's request: midnight navy/cyan/lavender for dark mode and ice-blue/lavender for light mode.
+- Added shared theme-specific linear gradients across surfaces, navigation selection, primary actions and charts, with a fine background grid and restrained static glow in dark mode. Kept gain/loss colors distinct and typography solid for readability.
+- Updated `frontend/src/styles/index.css`, SVG gradients in `PriceChart.tsx`, browser theme colors and the design-system record. Layout, data and routes are unchanged.
+- Validation: lint, production build and eight Playwright checks across all three pages, both themes and 375/768/1024/1440px. All automated accessibility, overflow and reduced-motion checks pass. Visually reviewed both desktop themes and mobile dark backtest.
