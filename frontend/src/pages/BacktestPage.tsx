@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { FlaskConical, Save, ArrowRight, Check } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { FlaskConical, Save, ArrowRight, Check, Play } from 'lucide-react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { BacktestResults } from '@/components/BacktestResults'
+import { createBacktest, getBacktest } from '@/api/backtests'
 import { getStocks } from '@/api/marketData'
 import { CUTOFF, START, number } from '@/hooks/useMarket'
 
@@ -37,14 +39,30 @@ export function BacktestPage() {
   const [draft, setDraft] = useState(readDraft)
   const [message, setMessage] = useState('')
   const [saveError, setSaveError] = useState(false)
+  const [params, setParams] = useSearchParams()
+  const queryClient = useQueryClient()
+  const runId = params.get('run')
+  const result = useQuery({
+    queryKey: ['backtest', runId],
+    queryFn: () => getBacktest(runId!),
+    enabled: Boolean(runId),
+    retry: false,
+    staleTime: Infinity,
+  })
+  const run = useMutation({
+    mutationFn: createBacktest,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['backtest', data.id], data)
+      setParams({ run: data.id })
+    },
+  })
   const symbol = draft.symbol || stocks.data?.[0]?.symbol || ''
   const invalid = draft.from > draft.to
   function update(key: keyof typeof defaults, value: string) {
     setDraft({ ...draft, [key]: value })
     setMessage('')
   }
-  function save(event: FormEvent) {
-    event.preventDefault()
+  function save() {
     if (invalid) return
     try {
       localStorage.setItem(KEY, JSON.stringify({ ...draft, symbol }))
@@ -57,21 +75,37 @@ export function BacktestPage() {
       )
     }
   }
+  function submit(event: FormEvent) {
+    event.preventDefault()
+    if (invalid || run.isPending || !symbol) return
+    run.mutate({
+      symbol,
+      from: draft.from,
+      to: draft.to,
+      capital: Number(draft.capital),
+      feePercent: Number(draft.fee),
+    })
+  }
+  const cannotSubmit =
+    invalid ||
+    !symbol ||
+    !stocks.data?.some((stock) => stock.symbol === symbol) ||
+    run.isPending
   return (
     <>
       <div className="page-heading">
         <div>
           <h1>Phòng thử chiến lược</h1>
-          <p>Bắt đầu từ một ý tưởng. Chuẩn bị dữ liệu để kiểm chứng.</p>
+          <p>Kiểm chứng luồng giao dịch trên dữ liệu lịch sử.</p>
         </div>
-        <span className="snapshot">Backtest · Đang chuẩn bị</span>
+        <span className="snapshot">Backtest · Mock Quant</span>
       </div>
       <div className="backtest-notice">
         <FlaskConical size={20} aria-hidden="true" />
         <p>
-          <strong>Không gian dành cho bước tiếp theo.</strong> Bạn có thể lưu
-          cấu hình nháp ngay bây giờ. Chức năng chạy mô phỏng sẽ được triển khai
-          trong Phase 2.
+          <strong>Mô phỏng với tín hiệu mẫu.</strong> Mua ở phiên 1, bán ở phiên
+          6, lặp mỗi 10 phiên. Lệnh khớp ở giá mở cửa phiên kế tiếp. Quant AI sẽ
+          được kết nối sau.
         </p>
       </div>
       <div className="backtest-grid">
@@ -79,10 +113,14 @@ export function BacktestPage() {
           <div className="panel-heading">
             <div>
               <h2>Thiết lập phiên thử nghiệm</h2>
-              <p>Bản nháp được lưu riêng trên trình duyệt của bạn</p>
+              <p>Kết quả được lưu trong cơ sở dữ liệu sau mỗi lần chạy</p>
             </div>
           </div>
-          <form className="backtest-form" onSubmit={save}>
+          <form
+            className="backtest-form"
+            onSubmit={submit}
+            aria-busy={run.isPending}
+          >
             <label>
               Cổ phiếu
               <select
@@ -121,6 +159,7 @@ export function BacktestPage() {
                 <input
                   type="date"
                   value={draft.from}
+                  min="2021-01-01"
                   max={CUTOFF}
                   required
                   onChange={(event) => update('from', event.target.value)}
@@ -131,6 +170,7 @@ export function BacktestPage() {
                 <input
                   type="date"
                   value={draft.to}
+                  min="2021-01-01"
                   max={CUTOFF}
                   required
                   aria-invalid={invalid}
@@ -150,18 +190,19 @@ export function BacktestPage() {
                 <input
                   type="number"
                   min="1"
-                  step="1"
+                  max="1000000000000"
+                  step="0.01"
                   value={draft.capital}
                   required
                   onChange={(event) => update('capital', event.target.value)}
                 />
               </label>
               <label>
-                Phí giao dịch (%)
+                Phí giao dịch (% mỗi chiều)
                 <input
                   type="number"
                   min="0"
-                  max="100"
+                  max="5"
                   step="0.01"
                   value={draft.fee}
                   required
@@ -174,23 +215,39 @@ export function BacktestPage() {
                 <FlaskConical size={19} aria-hidden="true" />
               </span>
               <div>
-                <strong>Chiến lược mô phỏng</strong>
-                <p>Sẽ có ở Phase 2. Quant AI sẽ được kết nối sau.</p>
+                <strong>Mock Quant · Chu kỳ 10 phiên</strong>
+                <p>Mua bằng tiền sẵn có, bán toàn bộ vị thế.</p>
               </div>
-              <span className="tag">Sắp có</span>
+              <span className="tag">v1</span>
             </div>
-            <button
-              className="button"
-              type="submit"
-              disabled={
-                invalid ||
-                !symbol ||
-                !stocks.data?.some((stock) => stock.symbol === symbol)
-              }
-            >
-              <Save size={17} aria-hidden="true" />
-              Lưu cấu hình nháp
-            </button>
+            <div className="backtest-actions">
+              <button className="button" type="submit" disabled={cannotSubmit}>
+                <Play size={17} aria-hidden="true" />
+                {run.isPending ? 'Đang chạy…' : 'Chạy backtest'}
+              </button>
+              <button
+                className="button secondary"
+                type="button"
+                onClick={save}
+                disabled={cannotSubmit}
+              >
+                <Save size={17} aria-hidden="true" />
+                Lưu cấu hình nháp
+              </button>
+            </div>
+            {run.isPending && (
+              <p role="status">Đang mô phỏng và lưu kết quả…</p>
+            )}
+            {run.isError && (
+              <p className="negative" role="alert">
+                {run.error.message}
+              </p>
+            )}
+            {run.isSuccess && !run.isPending && (
+              <p role="status">
+                Đã hoàn tất và lưu kết quả. <a href="#results">Xem báo cáo</a>
+              </p>
+            )}
             {message && (
               <p className={saveError ? 'negative' : 'positive'} role="status">
                 {message}
@@ -203,12 +260,13 @@ export function BacktestPage() {
             <FlaskConical size={32} aria-hidden="true" />
           </span>
           <h2>
-            Mỗi chiến lược
+            Từ tín hiệu
             <br />
-            bắt đầu bằng dữ liệu.
+            đến kết quả.
           </h2>
           <p>
-            Khám phá lịch sử giá trước khi thử nghiệm một cách tiếp cận mới.
+            Theo dõi đường vốn, phí giao dịch và từng lần mua bán trong cùng một
+            báo cáo.
           </p>
           <dl>
             <div>
@@ -221,7 +279,13 @@ export function BacktestPage() {
             </div>
             <div>
               <dt>Kết quả mô phỏng</dt>
-              <dd>Chưa chạy</dd>
+              <dd>
+                {run.isPending
+                  ? 'Đang chạy…'
+                  : result.data
+                    ? 'Đã lưu'
+                    : 'Chưa chạy'}
+              </dd>
             </div>
           </dl>
           <Link
@@ -236,6 +300,25 @@ export function BacktestPage() {
           </p>
         </aside>
       </div>
+      {runId && result.isPending && (
+        <p className="result-loading" role="status">
+          Đang tải kết quả đã lưu…
+        </p>
+      )}
+      {runId && result.isError && (
+        <div className="result-error" role="alert">
+          <p>{result.error.message}</p>
+          <button
+            className="button secondary"
+            onClick={() => void result.refetch()}
+          >
+            Tải lại kết quả
+          </button>
+        </div>
+      )}
+      {result.data && (
+        <BacktestResults key={result.data.id} run={result.data} />
+      )}
     </>
   )
 }

@@ -1721,3 +1721,235 @@ button:disabled {
     margin-left: auto;
   }
 }
+
+/* Phase 2 results reuse the established light/dark surface tokens. */
+.backtest-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.backtest-actions .button {
+  flex: 1;
+  white-space: nowrap;
+}
+.backtest-results {
+  display: grid;
+  gap: 22px;
+  margin-top: 44px;
+  min-width: 0;
+  scroll-margin-top: 24px;
+}
+.result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.result-heading h2 {
+  font-size: 26px;
+  letter-spacing: -0.6px;
+  margin: 7px 0;
+}
+.result-heading p,
+.result-inputs {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.result-heading .button {
+  flex-shrink: 0;
+}
+.result-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.result-metrics article {
+  padding: 22px 20px;
+  border: 1px solid var(--border);
+  background: var(--surface-gradient);
+  border-radius: 10px;
+  min-width: 0;
+}
+.result-metrics span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.result-metrics strong {
+  display: block;
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.result-metrics small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.equity-chart {
+  padding: 0 24px 24px;
+}
+.equity-chart .price-figure {
+  margin: 20px 0 12px;
+}
+.equity-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.equity-readout strong {
+  font-size: 23px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.equity-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.equity-legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.equity-legend i {
+  width: 20px;
+  height: 0;
+  border-top: 2px solid var(--accent);
+}
+.equity-legend span + span i {
+  border-top: 2px dashed var(--muted);
+}
+.equity-inspector {
+  display: grid;
+  gap: 5px;
+  margin-top: 22px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.equity-inspector input {
+  width: 100%;
+  accent-color: var(--accent);
+  min-height: 44px;
+  padding: 0;
+}
+.equity-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.equity-breakdown dt {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.equity-breakdown dd {
+  font-size: 14px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.portfolio-summary .equity-breakdown {
+  padding: 0 24px 24px;
+}
+.result-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.result-pagination > div {
+  display: flex;
+  gap: 8px;
+}
+.simulation-assumptions {
+  border-top: 1px solid var(--border);
+  padding: 8px 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.simulation-assumptions summary {
+  cursor: pointer;
+  padding: 12px 0;
+  color: var(--ink);
+}
+.simulation-assumptions p {
+  margin: 12px 0;
+  max-width: 85ch;
+}
+.simulation-assumptions code {
+  overflow-wrap: anywhere;
+}
+.result-error,
+.result-loading {
+  padding: 24px;
+  margin-top: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.result-error p {
+  margin-bottom: 14px;
+}
+@media (max-width: 1100px) {
+  .result-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .result-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .result-heading h2 {
+    font-size: 23px;
+  }
+  .result-metrics {
+    gap: 10px;
+  }
+  .result-metrics article {
+    padding: 16px 12px;
+  }
+  .equity-chart {
+    padding: 0 16px 18px;
+  }
+  .equity-chart .chart-axes {
+    height: 190px;
+  }
+  .equity-breakdown {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .equity-breakdown > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .equity-breakdown dt {
+    margin-bottom: 0;
+  }
+  .result-pagination {
+    padding: 16px;
+  }
+}
+
+.backtest-results .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--accent);
+}

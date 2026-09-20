@@ -9,7 +9,7 @@ User-requested redesign: three primary destinations — market overview, stock d
 - Desktop left navigation; mobile three-item navigation in document flow. Active route is explicit; URLs are shareable.
 - Home describes only stored symbols, never labels a subset statistic VN-Index or whole-market data. Aggregate only matching latest dates; rank the top five by volume. No invented news, live prices or performance.
 - Stock directory supports search, sorting and deep-linked historical detail.
-- Backtest is a clearly marked preparation workspace. Save a local draft; do not simulate returns or start Phase 2 engine work.
+- Phase 2 Backtest is a mock simulation workspace: retain local drafts, validate inputs, prevent duplicate submits, show loading/error/success states, and retrieve immutable results via URL. Preserve existing gradients. Reports expose input metadata, metrics, an accessible equity curve and a paginated order log.
 - Charts have textual descriptions and tables. Direction also uses signs/text, never color alone.
 - All pages: loading, failure with retry, empty state, visible keyboard focus, reduced-motion support, 375/768/1024/1440px verification.
 
