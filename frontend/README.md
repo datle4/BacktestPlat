@@ -1,29 +1,22 @@
-# VN Stock Dashboard — Frontend
+# BacktestPlat frontend
 
-Feature 0 provides the React foundation only. Product screens and API integrations are intentionally not implemented yet.
+React + TypeScript + Vite. Setup screen only; no market or backtest features yet.
 
-## Requirements
-
-- Node.js 24+
-- npm 11+
-
-## Commands
-
-```bash
-cp .env.example .env.local
+```sh
 npm ci
 npm run dev
 ```
 
-Quality checks:
+Open http://localhost:5173. API requests under `/api` will proxy to localhost:8080.
 
-```bash
+```sh
 npm run lint
-npm run lint:contract
 npm test
 npm run build
 npx playwright install chromium
 npm run test:e2e
 ```
 
-The Vite development server proxies `/api`, `/oauth2`, and `/login/oauth2` to `http://localhost:8080`. Browser state is limited to non-sensitive UI preferences; authentication tokens must never be stored in local storage.
+The setup page supports light/dark/system themes, keyboard navigation and responsive layouts.
+End-to-end tests cover 375/768/1024/1440px, reduced motion and automated accessibility checks.
+See the [root README](../README.md) for Docker PostgreSQL and backend instructions.

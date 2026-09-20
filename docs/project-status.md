@@ -4,6 +4,7 @@ Setup checkpoint only. Per user instruction, stop before business features and w
 
 [DONE] Project setup
 [DONE] Database setup
+[DONE] Frontend setup cleanup and README
 [TODO] Stock storage
 [TODO] Historical price storage and API
 [TODO] Market data provider and daily scheduler

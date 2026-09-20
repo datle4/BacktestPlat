@@ -11,7 +11,7 @@ test('Foundation shell is responsive and has no automated A/AA violations', asyn
   await expect(
     page.getByRole('heading', {
       level: 1,
-      name: /một nền móng rõ ràng cho dữ liệu thị trường/i,
+      name: /nền tảng backtest cổ phiếu/i,
     }),
   ).toBeVisible()
   await expect(page.getByRole('link', { name: /bỏ qua tới nội dung chính/i })).toHaveAttribute(
