@@ -16,8 +16,8 @@ Phase 1 is complete. Phase 2 was explicitly authorized on 2026-09-20 and is now 
 [DONE] Compact Light/Dark dropdown, dark background grid removal and homepage copy
 [DONE] Interactive candlestick history with 1D/1W/1M/1Y, volume, crosshair and pan/zoom
 [DONE] Frontend backtest draft workspace (local save only)
-[IN PROGRESS] Quant provider interface and deterministic mock
-[TODO] Order execution and portfolio
+[DONE] Quant provider interface and deterministic mock
+[IN PROGRESS] Order execution and portfolio
 [TODO] Backtest engine and performance metrics
 [TODO] Backtest result API
 [TODO] Connect frontend backtest form to simulation API
