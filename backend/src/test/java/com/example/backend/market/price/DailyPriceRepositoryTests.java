@@ -1,15 +1,18 @@
 package com.example.backend.market.price;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.example.backend.TestDatabaseCleaner.clearMarketData;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.example.backend.market.stock.Stock;
 import com.example.backend.market.stock.StockRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -17,6 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 class DailyPriceRepositoryTests {
     @Autowired StockRepository stocks;
     @Autowired DailyPriceRepository prices;
+    @Autowired JdbcTemplate jdbc;
+
+    @BeforeEach
+    void clearExistingData() {
+        clearMarketData(jdbc);
+    }
 
     @Test
     void upsertMaintainsOnePricePerStockAndTradingDate() {
@@ -48,4 +57,3 @@ class DailyPriceRepositoryTests {
         return new BigDecimal(value);
     }
 }
-

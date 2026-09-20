@@ -14,3 +14,5 @@ server:
 app:
   market-data:
     cutoff: ${MARKET_DATA_CUTOFF:2026-09-20}
+    import-enabled: ${MARKET_DATA_IMPORT_ENABLED:false}
+    import-start: ${MARKET_DATA_IMPORT_START:2021-01-01}

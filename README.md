@@ -2,9 +2,9 @@
 
 Nền tảng kiểm thử chiến lược giao dịch cổ phiếu từ dữ liệu lịch sử OHLCV và tín hiệu Quant.
 
-**Trạng thái: đã thiết lập nền tảng, dừng trước khi triển khai tính năng nghiệp vụ theo yêu cầu.**
-Hiện có Spring Boot, kết nối database, PostgreSQL Docker, frontend React và CI.
-Chưa có bảng cổ phiếu, dữ liệu giá, API nghiệp vụ, Quant provider hoặc engine backtest.
+**Trạng thái: đang thực hiện Phase 1 — web cơ bản và dữ liệu lịch sử.**
+Backend đã có lưu trữ cổ phiếu/OHLCV, API đọc và lệnh Java nhập dữ liệu lịch sử một lần.
+Giao diện dữ liệu cơ bản là phần còn lại của Phase 1; backtest và Quant chưa được triển khai.
 
 ## Công nghệ
 
@@ -16,8 +16,8 @@ Chưa có bảng cổ phiếu, dữ liệu giá, API nghiệp vụ, Quant provid
 ## Cấu trúc
 
 ```text
-backend/       Spring Boot và test kết nối database
-frontend/      Màn hình nền BacktestPlat, theme sáng/tối
+backend/       Spring Boot, API cổ phiếu/OHLCV và importer Java
+frontend/      React, theme sáng/tối và màn hình nền BacktestPlat
 compose.yaml   PostgreSQL local và volume dữ liệu
 .env.example   Cấu hình local mẫu
 docs/          Tiến độ, nhật ký và quy trình Git
@@ -59,11 +59,29 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-Backend chạy tại `http://localhost:8080`. Log khởi động xác nhận kết nối PostgreSQL.
-**Truy cập `/` hoặc `/api` hiện trả 404 vì chưa triển khai endpoint**; đây không phải lỗi setup.
-Flyway đã cấu hình nhưng chưa có migration nghiệp vụ; thông báo `No migrations found` ở checkpoint này là bình thường.
+Backend chạy tại `http://localhost:8080`. Các endpoint hiện có:
 
-### 3. Frontend
+- `GET /api/stocks`
+- `GET /api/stocks/{symbol}`
+- `GET /api/stocks/{symbol}/prices?from=2021-01-01&to=2026-09-20`
+
+### 3. Nhập dữ liệu lịch sử một lần bằng Java
+
+Importer dùng thư viện Java `yfinance4j`, lấy dữ liệu Yahoo Finance cho `FPT.VN`,
+`HPG.VN`, `TCB.VN`, `VIC.VN` và `VNM.VN`, rồi lưu vào PostgreSQL Docker.
+Sau khi database đã chạy và biến môi trường đã được export như bước 2:
+
+```sh
+cd backend
+MARKET_DATA_IMPORT_ENABLED=true ./mvnw --batch-mode --no-transfer-progress spring-boot:run
+```
+
+Tiến trình tự thoát khi hoàn tất. Khoảng mặc định là 01/01/2021–20/09/2026;
+ngày kết thúc là cutoff cố định, không tự đổi theo ngày chạy. Upsert theo mã và ngày giao dịch
+nên có thể chạy lại an toàn. Bản ghi nguồn thiếu hoặc có OHLCV mâu thuẫn bị ghi cảnh báo và bỏ qua,
+không được tự sửa hoặc dựng dữ liệu thay thế.
+
+### 4. Frontend
 
 Mở terminal khác tại thư mục gốc:
 
@@ -87,6 +105,9 @@ Frontend không cần API key hoặc biến môi trường tại checkpoint setu
 | `DB_PORT` | `55432` | Cổng Docker publish trên host |
 | `DB_URL` | `jdbc:postgresql://localhost:55432/backtestplat` | JDBC URL của backend |
 | `PORT` | `8080` | Cổng HTTP backend |
+| `MARKET_DATA_IMPORT_ENABLED` | `false` | Chạy importer Java một lần rồi thoát |
+| `MARKET_DATA_IMPORT_START` | `2021-01-01` | Ngày bắt đầu lịch sử |
+| `MARKET_DATA_CUTOFF` | `2026-09-20` | Ngày kết thúc cố định, bao gồm ngày này |
 
 Nếu đổi `DB_PORT`, cập nhật cả `DB_URL`. Nếu đổi `PORT`, sửa target proxy tương ứng trong `frontend/vite.config.ts`.
 Compose đọc `.env` tự động; Spring Boot cần export biến như lệnh ở trên.
@@ -133,7 +154,7 @@ docker compose --env-file .env.example config --quiet
 CI chạy khi push `main`, `feature/*`, `fix/*`, `test/*` và khi mở PR:
 Maven verify, test trên PostgreSQL service, kiểm tra Compose, frontend lint/unit/build/E2E.
 
-## Kiến trúc nghiệp vụ dự kiến — chưa triển khai
+## Kiến trúc nghiệp vụ
 
 ```text
 Dữ liệu OHLCV → Quant provider → BUY / SELL / HOLD
@@ -156,8 +177,8 @@ Không triển khai authentication, user management, Redis, Kafka hoặc microse
 ## Phạm vi dữ liệu hiện tại
 
 Dùng bộ dữ liệu lịch sử cố định đến hết **20/09/2026** (múi giờ Việt Nam), chỉ gồm
-các phiên đã hoàn tất và có dữ liệu từ nguồn được chọn. Mốc này không tự tăng theo ngày mở ứng dụng.
-Chưa tải dữ liệu ở checkpoint setup; nguồn dữ liệu, danh sách mã và ngày bắt đầu lịch sử sẽ được thống nhất khi bắt đầu phase 1.
+các phiên đã hoàn tất và có dữ liệu từ nguồn. Mốc này không tự tăng theo ngày mở ứng dụng.
+Mặc định importer tải 5 mã HOSE `FPT`, `HPG`, `TCB`, `VIC`, `VNM` từ 01/01/2021.
 
 Phạm vi hiện tại chỉ có nhập dữ liệu lịch sử một lần, **chưa có scheduler hằng ngày,
 tải bù lúc khởi động hoặc cập nhật nền**. Khi cần cập nhật thêm, sẽ thiết kế tiếp theo yêu cầu.
@@ -172,4 +193,3 @@ Các điều chỉnh này thay thế yêu cầu cập nhật hằng ngày và t�
 
 Mỗi tính năng bắt đầu từ `main` mới nhất, có nhánh `feature/<tên>`, test, commit,
 push và merge riêng; giữ nguyên nhánh remote. Không rewrite history hoặc force push.
-**Checkpoint hiện tại yêu cầu dừng tại setup. Chỉ bắt đầu stock storage sau khi người dùng chọn mô hình và yêu cầu tiếp tục.**

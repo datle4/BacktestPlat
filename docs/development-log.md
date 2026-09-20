@@ -64,3 +64,13 @@ Branch: `feature/historical-price-api`
 - Added RFC 9457-style problem responses for unknown symbols, invalid dates and requests beyond the cutoff.
 - Tests cover a successful series, reversed ranges and dates after 2026-09-20.
 - Limitation: the endpoint returns an empty series when a known stock has no observations in the range.
+
+## One-time historical data import
+Branch: `feature/historical-data-import`
+
+- Added a Java-only importer using `am.ik.yfinance4j:yfinance4j:0.1.1`; Python is not part of the repository, runtime or Docker setup.
+- Imports FPT, HPG, TCB, VIC and VNM from 2021-01-01 through the fixed 2026-09-20 cutoff, then exits. Existing `(stock_id, trading_date)` rows are updated, so reruns are idempotent.
+- Validates the requested date range and OHLCV integrity. Five inconsistent Yahoo rows on 2021-11-02 were logged and skipped instead of being altered.
+- Verified against PostgreSQL Docker: 7,432 stored rows, latest session 2026-09-18, zero rows after the cutoff and about 1.1 MB of table/index storage.
+- Tests cover the five configured symbols, cutoff enforcement, valid persistence and rejection of inconsistent provider data.
+- Limitation: Yahoo Finance is an external unofficial source; import requires network access and the provider may change or rate-limit requests.

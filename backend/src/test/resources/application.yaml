@@ -8,3 +8,5 @@ spring:
 app:
   market-data:
     cutoff: 2026-09-20
+    import-enabled: false
+    import-start: 2021-01-01
