@@ -1,6 +1,6 @@
 # MVP status
 
-Phase 1 is active. Complete the basic historical-data web experience, then stop before Phase 2.
+Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 
 [DONE] Project setup
 [DONE] Database setup
@@ -9,7 +9,7 @@ Phase 1 is active. Complete the basic historical-data web experience, then stop 
 [DONE] Historical price storage
 [DONE] Historical price API
 [DONE] One-time historical data import through 2026-09-20
-[TODO] Basic historical market data frontend
+[DONE] Basic historical market data frontend
 [TODO] Quant provider interface and deterministic mock
 [TODO] Order execution and portfolio
 [TODO] Backtest engine and performance metrics
