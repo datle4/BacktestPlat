@@ -127,3 +127,12 @@ Branch: `feature/phase-two-documentation`
 - Translated the root README into English while preserving local Docker/import/test instructions.
 - Recorded Phase 2 authorization and the incremental, private Vietnamese implementation-guide workflow. Added explicit Git exclusions for the PDF, its editable sources and render intermediates.
 - Validation: reviewed setup commands against current configuration and checked the Git exclusions. No application behavior changed.
+
+## Mock Quant contract
+
+Branch: `feature/mock-quant-provider`
+
+- Added `QuantSignalProvider`, immutable chronological `SignalContext`, and `mock-cycle-v1`: BUY on session 1, SELL on session 6, repeat every 10 available sessions.
+- Signals contain no execution, sizing or accounting logic. Real Quant remains Phase 3.
+- Validation: backend test suite, including deterministic cycles and immutable/ordered history tests.
+- Added a private PDF walkthrough after completion; its sources and output are ignored.
