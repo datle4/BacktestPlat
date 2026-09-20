@@ -22,12 +22,29 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class,
             MissingServletRequestParameterException.class,
-            MethodArgumentNotValidException.class})
+            org.springframework.http.converter.HttpMessageNotReadableException.class})
     ResponseEntity<ProblemDetail> handleBadRequest(Exception exception) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 "Kiểm tra lại mã cổ phiếu và ngày theo định dạng YYYY-MM-DD");
         problem.setTitle("Yêu cầu không hợp lệ");
         return ResponseEntity.badRequest().body(problem);
     }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ProblemDetail> handleValidation(MethodArgumentNotValidException exception) {
+        String detail = exception.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage()).distinct().sorted()
+                .collect(java.util.stream.Collectors.joining("; "));
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
+        problem.setTitle("Kiểm tra cấu hình backtest");
+        return ResponseEntity.badRequest().body(problem);
+    }
+
+    @ExceptionHandler(org.springframework.dao.DataAccessException.class)
+    ResponseEntity<ProblemDetail> handleDatabase(org.springframework.dao.DataAccessException exception) {
+        org.slf4j.LoggerFactory.getLogger(ApiExceptionHandler.class).error("Database request failed", exception);
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ProblemDetail.forStatusAndDetail(
+                HttpStatus.SERVICE_UNAVAILABLE, "Cơ sở dữ liệu tạm thời không khả dụng. Vui lòng thử lại."));
+    }
+
 }
 

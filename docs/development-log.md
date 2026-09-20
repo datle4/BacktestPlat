@@ -147,3 +147,13 @@ Branch: `feature/backtest-engine`
 - Validation: 19 backend tests, including a hand-calculated fee/drawdown example, history-prefix checks and rounding boundaries.
 - Limitations: lot size 1; no slippage, taxes, T+ settlement, partial fills or separate corporate-action processing.
 - Private PDF extended with the implementation and arithmetic walkthrough.
+
+## Saved backtest API
+
+Branch: `feature/backtest-result-api`
+
+- Added validated POST `/api/backtests` and GET `/api/backtests/{id}`, with UUID, input metadata and immutable versioned JSON snapshots in Flyway V3.
+- Explicit 400/404/422/503 errors; successful POST is transactional and returns 201 + Location.
+- Validation: 22 H2 backend tests, including full POST/GET snapshot equality after changing source prices and invalid-request cases.
+- README now documents the API contract; private PDF explains controller/service/repository flow.
+- No authentication, run listing, retention policy or real Quant adapter is added.
