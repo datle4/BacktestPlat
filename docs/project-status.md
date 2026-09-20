@@ -10,11 +10,13 @@ Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 [DONE] Historical price API
 [DONE] One-time historical data import through 2026-09-20
 [DONE] Basic historical market data frontend
+[DONE] Three-page UI redesign, Inter typography and stock search/sort
+[DONE] Frontend backtest draft workspace (local save only)
 [TODO] Quant provider interface and deterministic mock
 [TODO] Order execution and portfolio
 [TODO] Backtest engine and performance metrics
 [TODO] Backtest result API
-[TODO] Frontend backtest form
+[TODO] Connect frontend backtest form to simulation API
 [TODO] Result dashboard and equity curve
 [TODO] Trade history
 [TODO] Docker application stack

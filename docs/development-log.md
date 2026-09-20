@@ -83,3 +83,12 @@ Branch: `feature/historical-data-frontend`
 - Implemented loading, error, empty-data and invalid-range states while retaining the light/dark/system theme preference.
 - Verified with the actual PostgreSQL snapshot, plus frontend lint, three Vitest checks, production build and Playwright at 375, 768, 1024 and 1440px in both themes with automated accessibility checks.
 - Phase 1 is complete. Development stops before backtesting and mock Quant until the user explicitly starts Phase 2.
+
+## Three-page market workspace
+Branch: `feature/multipage-market-ui`
+
+- Applied the user-requested UI/UX Pro Max workflow and replaced Fira with self-hosted Inter Variable, including Vietnamese glyphs. Design decisions are recorded in `design-system/backtestplat/MASTER.md`.
+- Added separate market, stock-directory and backtest-draft routes with responsive navigation, persistent themes, stock search/sort, shareable stock details and a responsive price chart.
+- Market statistics aggregate matching latest dates only and explicitly describe the tracked subset. The activity list shows five leaders. No news, index values or returns are fabricated.
+- Backtest saves draft settings locally; execution, results and Quant remain outside this change and await Phase 2.
+- Validation: frontend lint, six Vitest checks, production build and eight Playwright checks at 375/768/1024/1440px. Browser checks cover all routes in both themes, accessibility, horizontal overflow, reduced motion, draft restoration, deep links and data-error recovery. Visually reviewed desktop/mobile captures and corrected low contrast and table overflow.

@@ -1,6 +1,6 @@
 # BacktestPlat frontend
 
-React + TypeScript + Vite. Trang dữ liệu thị trường đọc danh sách cổ phiếu và OHLCV lịch sử từ backend.
+React + TypeScript + Vite. Ba trang dùng dữ liệu OHLCV lịch sử từ backend Java.
 
 ```sh
 npm ci
@@ -17,7 +17,11 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Trang dữ liệu hỗ trợ chọn mã và khoảng ngày, biểu đồ giá đóng cửa, thống kê nhanh,
-bảng 12 phiên gần nhất, theme sáng/tối/hệ thống và đầy đủ trạng thái tải/lỗi/rỗng.
+- `/`: tổng quan nhóm cổ phiếu, khối lượng, độ rộng, top 5 giao dịch và biểu đồ giá.
+- `/stocks`: tìm kiếm, sắp xếp và lịch sử giá theo khoảng ngày; `/stocks?symbol=FPT` mở chi tiết.
+- `/backtest`: lưu/khôi phục cấu hình nháp bằng localStorage; chưa có engine hoặc kết quả mô phỏng.
+
+Inter Variable tự host hỗ trợ tiếng Việt; theme sáng/tối/hệ thống, bàn phím và trạng thái tải/lỗi/rỗng.
+Các thống kê chỉ phản ánh nhóm mã đã nhập, không phải chỉ số toàn sàn.
 End-to-end tests cover 375/768/1024/1440px, reduced motion and automated accessibility checks.
 See the [root README](../README.md) for Docker PostgreSQL and backend instructions.

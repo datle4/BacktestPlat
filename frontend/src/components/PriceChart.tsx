@@ -1,55 +1,99 @@
+import { useId } from 'react'
 import type { PricePoint } from '@/api/marketData'
+import { date, number } from '@/hooks/useMarket'
 
-const WIDTH = 920
-const HEIGHT = 320
-const PADDING = { top: 22, right: 24, bottom: 38, left: 72 }
-
-const priceFormatter = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 })
-const dateFormatter = new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
-
-function formatDate(value: string) {
-  return dateFormatter.format(new Date(`${value}T00:00:00+07:00`))
-}
-
-export function PriceChart({ prices, symbol }: { prices: PricePoint[]; symbol: string }) {
-  const closes = prices.map((price) => price.close)
-  const minimum = Math.min(...closes)
-  const maximum = Math.max(...closes)
-  const spread = maximum - minimum || Math.max(maximum * 0.02, 1)
-  const chartWidth = WIDTH - PADDING.left - PADDING.right
-  const chartHeight = HEIGHT - PADDING.top - PADDING.bottom
-  const x = (index: number) => PADDING.left + (index / Math.max(prices.length - 1, 1)) * chartWidth
-  const y = (value: number) => PADDING.top + ((maximum - value) / spread) * chartHeight
-  const points = prices.map((price, index) => `${x(index)},${y(price.close)}`).join(' ')
-  const area = `${PADDING.left},${PADDING.top + chartHeight} ${points} ${PADDING.left + chartWidth},${PADDING.top + chartHeight}`
-  const gridValues = Array.from({ length: 5 }, (_, index) => maximum - (spread * index) / 4)
-  const first = prices.at(0)
-  const last = prices.at(-1)
-
+export function PriceChart({
+  prices,
+  symbol,
+}: {
+  prices: PricePoint[]
+  symbol: string
+}) {
+  const id = useId()
+  if (!prices.length)
+    return <p className="empty-search">Không có giá trong khoảng này.</p>
+  const minimum = Math.min(...prices.map((bar) => bar.close))
+  const maximum = Math.max(...prices.map((bar) => bar.close))
+  const padding = Math.max((maximum - minimum) * 0.15, maximum * 0.005, 1)
+  const low = minimum - padding
+  const high = maximum + padding
+  const x = (index: number) =>
+    prices.length === 1 ? 50 : (index / (prices.length - 1)) * 100
+  const y = (value: number) => 100 - ((value - low) / (high - low)) * 100
+  const points = prices
+    .map((bar, index) => `${x(index)},${y(bar.close)}`)
+    .join(' ')
+  const last = prices[prices.length - 1]
   return (
-    <svg className="price-chart" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-labelledby="chart-title chart-description">
-      <title id="chart-title">Giá đóng cửa {symbol}</title>
-      <desc id="chart-description">
-        Từ {first ? formatDate(first.date) : ''} đến {last ? formatDate(last.date) : ''}, thấp nhất {priceFormatter.format(minimum)} và cao nhất {priceFormatter.format(maximum)} đồng.
-      </desc>
-      {gridValues.map((value, index) => {
-        const gridY = PADDING.top + (chartHeight * index) / 4
-        return (
-          <g key={value} aria-hidden="true">
-            <line className="chart-grid" x1={PADDING.left} x2={PADDING.left + chartWidth} y1={gridY} y2={gridY} />
-            <text className="chart-label" x={PADDING.left - 12} y={gridY + 4} textAnchor="end">{priceFormatter.format(value)}</text>
-          </g>
-        )
-      })}
-      <polygon className="chart-area" points={area} aria-hidden="true" />
-      <polyline className="chart-line" points={points} aria-hidden="true" />
-      {first && last ? (
-        <g aria-hidden="true">
-          <text className="chart-label" x={PADDING.left} y={HEIGHT - 10}>{formatDate(first.date)}</text>
-          <text className="chart-label" x={PADDING.left + chartWidth} y={HEIGHT - 10} textAnchor="end">{formatDate(last.date)}</text>
-          <circle className="chart-endpoint" cx={x(prices.length - 1)} cy={y(last.close)} r="5" />
-        </g>
-      ) : null}
-    </svg>
+    <figure
+      className="price-figure"
+      role="img"
+      aria-labelledby={`${id}-title ${id}-description`}
+    >
+      <figcaption className="sr-only" id={`${id}-title`}>
+        Giá đóng cửa {symbol}
+      </figcaption>
+      <p className="sr-only" id={`${id}-description`}>
+        Từ {date(prices[0].date)} đến {date(last.date)}, thấp nhất{' '}
+        {number.format(minimum)} và cao nhất {number.format(maximum)} đồng. Giá
+        cuối kỳ {number.format(last.close)} đồng.
+      </p>
+      <div className="chart-axes" aria-hidden="true">
+        <div className="y-labels">
+          {Array.from({ length: 5 }, (_, i) => (
+            <span key={i}>{number.format(high - ((high - low) * i) / 4)}</span>
+          ))}
+        </div>
+        <div className="chart-plot">
+          <div className="chart-grid-lines">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span key={i} />
+            ))}
+          </div>
+          <svg
+            className="price-chart"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--accent)" stopOpacity=".18" />
+                <stop
+                  offset="100%"
+                  stopColor="var(--accent)"
+                  stopOpacity=".01"
+                />
+              </linearGradient>
+            </defs>
+            {prices.length > 1 && (
+              <polygon
+                points={`0,100 ${points} 100,100`}
+                fill={`url(#${id}-fill)`}
+              />
+            )}
+            {prices.length > 1 ? (
+              <polyline
+                className="chart-line"
+                points={points}
+                vectorEffect="non-scaling-stroke"
+              />
+            ) : (
+              <line
+                className="chart-line"
+                x1="48"
+                x2="52"
+                y1={y(last.close)}
+                y2={y(last.close)}
+                vectorEffect="non-scaling-stroke"
+              />
+            )}
+          </svg>
+        </div>
+      </div>
+      <div className="x-labels" aria-hidden="true">
+        <span>{date(prices[0].date)}</span>
+        <span>{date(last.date)}</span>
+      </div>
+    </figure>
   )
 }

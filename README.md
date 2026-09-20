@@ -4,8 +4,8 @@ Nền tảng kiểm thử chiến lược giao dịch cổ phiếu từ dữ li�
 
 **Trạng thái: Phase 1 đã hoàn tất — web cơ bản và dữ liệu lịch sử đã sẵn sàng.**
 Backend có lưu trữ cổ phiếu/OHLCV, API đọc và lệnh Java nhập dữ liệu lịch sử một lần.
-Frontend có bộ lọc mã/ngày, thống kê, biểu đồ giá đóng cửa và bảng OHLCV.
-Đang dừng tại ranh giới Phase 1; backtest và Quant chưa được triển khai.
+Frontend có ba trang: tổng quan thị trường, danh sách cổ phiếu và không gian chuẩn bị backtest.
+Đang dừng tại ranh giới Phase 1; engine backtest và Quant chưa được triển khai.
 
 ## Công nghệ
 
@@ -18,7 +18,7 @@ Frontend có bộ lọc mã/ngày, thống kê, biểu đồ giá đóng cửa v
 
 ```text
 backend/       Spring Boot, API cổ phiếu/OHLCV và importer Java
-frontend/      Trang dữ liệu thị trường React, biểu đồ, bảng OHLCV và theme
+frontend/      Ba trang React: thị trường, cổ phiếu và bản nháp backtest
 compose.yaml   PostgreSQL local và volume dữ liệu
 .env.example   Cấu hình local mẫu
 docs/          Tiến độ, nhật ký và quy trình Git
@@ -93,8 +93,14 @@ npm run dev
 ```
 
 Mở [http://localhost:5173](http://localhost:5173).
-Trang dữ liệu thị trường cho phép chọn mã, khoảng ngày, xem thống kê, biểu đồ đóng cửa
-và 12 phiên OHLCV gần nhất. Vite chuyển tiếp `/api` tới backend tại `localhost:8080`.
+- `/`: tổng quan nhóm theo dõi, độ rộng, khối lượng, biểu đồ giá và 5 mã giao dịch sôi động.
+- `/stocks`: tìm theo mã/tên, sắp xếp, chọn mã để xem lịch sử theo khoảng ngày và 12 phiên OHLCV gần nhất. Có thể mở trực tiếp `/stocks?symbol=FPT`.
+- `/backtest`: nhập cổ phiếu, ngày, vốn và phí rồi lưu cấu hình nháp trong trình duyệt. Chưa chạy mô phỏng hoặc tạo kết quả; engine thuộc Phase 2.
+
+Giao diện dùng Inter tự host có ký tự tiếng Việt, hỗ trợ màn hình nhỏ và theme sáng/tối/hệ thống.
+Số liệu trang chủ chỉ đại diện nhóm mã có dữ liệu, không phải VN-Index hoặc toàn thị trường;
+thống kê phiên mới nhất chỉ gộp các mã cùng ngày. Không có tin tức hoặc giá trực tiếp.
+Vite chuyển tiếp `/api` tới backend tại `localhost:8080`.
 Frontend không cần API key hoặc biến môi trường riêng.
 
 ## Biến môi trường
@@ -143,8 +149,8 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-E2E kiểm tra màn hình nền ở 375, 768, 1024 và 1440px; theme sáng/tối,
-bàn phím, giảm chuyển động và accessibility tự động.
+E2E kiểm tra cả ba trang ở 375, 768, 1024 và 1440px; theme sáng/tối,
+bàn phím, giảm chuyển động, lưu/khôi phục nháp, lỗi/tải lại và accessibility tự động.
 
 Tại thư mục gốc:
 
