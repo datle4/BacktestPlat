@@ -1,12 +1,20 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
-import { MarketOverview } from '@/components/MarketOverview'
+import { AppShell } from '@/components/AppShell'
+import { MarketHome } from '@/pages/MarketHome'
+import { StocksPage } from '@/pages/StocksPage'
+import { BacktestPage } from '@/pages/BacktestPage'
 import { AppProviders } from '@/app/providers'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MarketOverview />,
+    element: <AppShell />,
+    children: [
+      { index: true, element: <MarketHome /> },
+      { path: 'stocks', element: <StocksPage /> },
+      { path: 'backtest', element: <BacktestPage /> },
+    ],
   },
   {
     path: '/status',

@@ -2,61 +2,151 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 const wcagTags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
-
-const stocks = [
-  { id: 1, symbol: 'FPT', name: 'FPT Corporation', exchange: 'HOSE' },
-  { id: 2, symbol: 'VNM', name: 'Vinamilk', exchange: 'HOSE' },
+const symbols = [
+  'ACB',
+  'BID',
+  'CTG',
+  'FPT',
+  'GAS',
+  'HPG',
+  'MBB',
+  'MSN',
+  'MWG',
+  'PLX',
+  'SSI',
+  'TCB',
+  'VCB',
+  'VIC',
+  'VNM',
 ]
-
-const series = {
-  symbol: 'FPT',
-  from: '2026-01-01',
-  to: '2026-09-20',
-  dataCutoff: '2026-09-20',
-  count: 3,
-  prices: [
-    { date: '2026-09-16', open: 98_000, high: 101_000, low: 97_000, close: 100_000, volume: 1_200_000 },
-    { date: '2026-09-17', open: 100_000, high: 104_000, low: 99_000, close: 103_000, volume: 1_500_000 },
-    { date: '2026-09-18', open: 103_000, high: 106_000, low: 102_000, close: 105_000, volume: 1_800_000 },
-  ],
-}
+const stocks = symbols.map((symbol, index) => ({
+  id: index + 1,
+  symbol,
+  name: symbol === 'FPT' ? 'FPT Corporation' : `${symbol} Company`,
+  exchange: 'HOSE',
+}))
+const prices = Array.from({ length: 30 }, (_, i) => ({
+  date: `2026-08-${String(i + 1).padStart(2, '0')}`,
+  open: 100000,
+  high: 106000,
+  low: 94000,
+  close: 100000 + Math.sin(i) * 3500 + i * 50,
+  volume: 1500000 + i * 25000,
+}))
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/stocks', (route) => route.fulfill({ json: stocks }))
-  await page.route('**/api/stocks/*/prices?*', (route) => route.fulfill({ json: series }))
+  await page.route('**/api/stocks/*/prices?*', (route) =>
+    route.fulfill({ json: { prices } }),
+  )
 })
 
-test('Market data screen is responsive and accessible in both themes', async ({ page }) => {
+test('three pages are responsive, accessible in both themes, and retain drafts', async ({
+  page,
+}, testInfo) => {
   await page.goto('/')
-
-  await expect(page.getByRole('heading', { level: 1, name: /dữ liệu thị trường/i })).toBeVisible()
-  await expect(page.getByRole('heading', { level: 2, name: 'FPT' })).toBeVisible()
-  await expect(page.getByRole('img', { name: /giá đóng cửa fpt/i })).toBeVisible()
-  await expect(page.getByRole('link', { name: /bỏ qua tới nội dung chính/i })).toHaveAttribute('href', '#main-content')
-
-  const hasPageOverflow = await page.evaluate(
-    () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
-  )
-  expect(hasPageOverflow).toBe(false)
-
-  const lightAccessibility = await new AxeBuilder({ page }).withTags(wcagTags).analyze()
-  expect(lightAccessibility.violations).toEqual([])
-
+  await expect(
+    page.getByRole('img', { name: /giá đóng cửa ACB/i }),
+  ).toBeVisible()
   await page.keyboard.press('Tab')
-  await expect(page.getByRole('link', { name: /bỏ qua tới nội dung chính/i })).toBeFocused()
+  await expect(
+    page.getByRole('link', { name: /bỏ qua tới nội dung chính/i }),
+  ).toBeFocused()
 
-  await page.getByLabel(/giao diện/i).selectOption('dark')
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
-  const darkAccessibility = await new AxeBuilder({ page }).withTags(wcagTags).analyze()
-  expect(darkAccessibility.violations).toEqual([])
+  for (const theme of ['light', 'dark']) {
+    await page.getByLabel('Giao diện').selectOption(theme)
+    for (const route of ['/', '/stocks', '/backtest']) {
+      await page.goto(route)
+      await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+      if (route === '/')
+        await expect(
+          page.getByRole('img', { name: /giá đóng cửa ACB/i }),
+        ).toBeVisible()
+      if (route === '/stocks')
+        await expect(
+          page.getByRole('button', { name: 'Xem VNM' }),
+        ).toBeAttached()
+      if (route === '/backtest')
+        await expect(
+          page.getByRole('button', { name: 'Lưu cấu hình nháp' }),
+        ).toBeEnabled()
+      expect(
+        await page.evaluate(
+          () =>
+            document.documentElement.scrollWidth >
+            document.documentElement.clientWidth,
+        ),
+      ).toBe(false)
+      expect(
+        (await new AxeBuilder({ page }).withTags(wcagTags).analyze())
+          .violations,
+      ).toEqual([])
+      await page.screenshot({
+        path: testInfo.outputPath(
+          `${theme}-${route === '/' ? 'home' : route.slice(1)}.png`,
+        ),
+        fullPage: true,
+      })
+    }
+  }
 
+  await page
+    .getByRole('combobox', { name: 'Cổ phiếu', exact: true })
+    .selectOption('FPT')
+  await page.getByRole('button', { name: 'Lưu cấu hình nháp' }).click()
+  await expect(page.getByRole('status')).toContainText('Đã lưu')
+  await page.reload()
+  await expect(
+    page.getByRole('combobox', { name: 'Cổ phiếu', exact: true }),
+  ).toHaveValue('FPT')
+  await page.getByRole('link', { name: 'Khám phá dữ liệu' }).click()
+  await expect(page).toHaveURL(/stocks\?symbol=FPT/)
+  await expect(
+    page.getByRole('heading', { name: 'Lịch sử giá FPT' }),
+  ).toBeVisible()
+  await page.getByLabel('Tìm cổ phiếu').fill('nonexistent')
+  await expect(page.getByRole('status')).toContainText('Không tìm thấy')
+  await page.goBack()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Phòng thử chiến lược',
+  )
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  const longestTransitionMs = await page.getByRole('button', { name: /xem dữ liệu/i }).evaluate((element) =>
-    Math.max(
-      ...getComputedStyle(element)
-        .transitionDuration.split(',')
-        .map((duration) => duration.trim().endsWith('ms') ? Number.parseFloat(duration) : Number.parseFloat(duration) * 1_000),
+  expect(
+    await page
+      .getByRole('button', { name: 'Lưu cấu hình nháp' })
+      .evaluate((element) =>
+        Math.max(
+          ...getComputedStyle(element)
+            .transitionDuration.split(',')
+            .map((value) => Number.parseFloat(value) * 1000),
+        ),
+      ),
+  ).toBeLessThanOrEqual(1)
+})
+
+test('data errors can be retried and empty price ranges are explained', async ({
+  page,
+}) => {
+  let failed = true
+  await page.route('**/api/stocks', (route) =>
+    route.fulfill(
+      failed
+        ? { status: 503, json: { detail: 'Unavailable' } }
+        : { json: stocks },
     ),
   )
-  expect(longestTransitionMs).toBeLessThanOrEqual(1)
+  await page.goto('/')
+  await expect(page.getByText('Chưa kết nối được dữ liệu')).toBeVisible()
+  failed = false
+  await page.getByRole('button', { name: 'Thử tải lại' }).click()
+  await expect(
+    page.getByRole('img', { name: /giá đóng cửa ACB/i }),
+  ).toBeVisible()
+  await page.route('**/api/stocks/FPT/prices?*', (route) =>
+    route.fulfill({ json: { prices: [] } }),
+  )
+  await page.goto('/stocks?symbol=FPT')
+  await expect(
+    page.getByText('Không có phiên trong khoảng đã chọn'),
+  ).toBeVisible()
 })
