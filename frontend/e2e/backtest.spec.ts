@@ -123,7 +123,11 @@ test('runs once, reloads the saved result and reads the curve in both themes', a
     await page.getByRole('button', { name: /^Giao diện:/ }).click()
     await page.getByRole('menuitemradio', { name: theme, exact: true }).click()
     await page.evaluate(async () => {
-      await Promise.all(document.getAnimations().map(animation => animation.finished.catch(() => undefined)))
+      await Promise.all(
+        document
+          .getAnimations()
+          .map((animation) => animation.finished.catch(() => undefined)),
+      )
     })
     expect(
       await page.evaluate(

@@ -59,3 +59,37 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+
+  application-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build and start the application stack
+        run: docker compose --profile app up -d --build --wait --wait-timeout 120
+      - name: Seed isolated CI data
+        run: docker compose exec -T db psql -v ON_ERROR_STOP=1 -U backtestplat -d backtestplat < frontend/integration/fixture.sql
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Verify real frontend / API / database flow
+        run: npm run test:e2e:integration
+        working-directory: frontend
+      - name: Application logs
+        if: always()
+        run: docker compose --profile app logs --no-color --tail=100
+      - name: Keep integration test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-integration
+          path: frontend/test-results
+          retention-days: 7
+      - name: Stop the stack
+        if: always()
+        run: docker compose --profile app down

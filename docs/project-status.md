@@ -1,6 +1,6 @@
 # MVP status
 
-Phase 1 is complete. Phase 2 was explicitly authorized on 2026-09-20 and is now in progress. Stop before Phase 3.
+Phases 1 and 2 are complete as of 2026-09-20. Phase 3 is not started; wait for the user and the collaborator’s Quant implementation.
 
 [DONE] Project setup
 [DONE] Database setup
@@ -24,7 +24,7 @@ Phase 1 is complete. Phase 2 was explicitly authorized on 2026-09-20 and is now 
 [DONE] Result dashboard and equity curve
 [DONE] Trade history
 [DONE] Docker application stack
-[IN PROGRESS] Final integration testing
+[DONE] Final integration testing
 
 ## Current scope — updated 2026-09-20
 

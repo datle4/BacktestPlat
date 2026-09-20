@@ -177,3 +177,14 @@ Branch: `feature/docker-application-stack`
 - Updated English README with full-stack startup, non-web one-off import and storage/lifecycle notes.
 - Validation: Compose config, production image builds and all three services healthy; Maven verify passed.
 - Private PDF now explains images, service DNS, ports, volume and importer lifecycle.
+
+## Phase 2 integration and completion
+
+Branch: `test/phase-two-integration`
+
+- Added a real Docker-stack Playwright test and CI job with a fresh, isolated seven-session SQL fixture. No fixture is loaded into the user's imported database.
+- Local integration used the real FPT snapshot: UI submission, POST 201, saved-result reload, next-stored-open fills, fee/equity/P&L reconciliation, both themes and accessibility all passed.
+- Final validation: Maven verify (22 tests), PostgreSQL (22 tests), frontend lint/build, 11 unit tests, 32 mocked browser checks and one real full-stack browser flow.
+- Existing 15-symbol / 22,296-row snapshot is intact. Docker serves the app at localhost:8088 with backend :8081; IntelliJ :8080 is left running.
+- README is English. The private PDF has been updated after every feature and is excluded from Git together with its sources.
+- Stop here: Phase 3 real Quant and automatic data refresh require a later explicit request.
