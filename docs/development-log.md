@@ -37,3 +37,12 @@ Branch: `docs/static-data-scope`
 - Updated README, project status and the setup screen's planned-data description. The original workflow remains as historical context, with current scope explicitly overriding the deferred requirements.
 - Validation: documentation diff review, frontend production build and existing unit tests.
 - No market data fetched and no business feature implemented; still awaiting the user's request to start Phase 1.
+
+## Stock storage
+Branch: `feature/stock-storage`
+
+- Added the `stocks` Flyway migration, JDBC repository and read-only `/api/stocks` endpoints.
+- Symbols are normalized to uppercase; symbol uniqueness and exchange values are enforced by the database.
+- Used a sequential bigint identity key and an exact unique constraint for predictable inserts and lookups.
+- Tests cover idempotent metadata upsert, normalization and stable symbol ordering.
+- Limitation: stocks are created by the historical importer in the next feature; no public write endpoint is exposed.

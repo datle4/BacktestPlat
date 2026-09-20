@@ -5,7 +5,7 @@ Setup checkpoint only. Per user instruction, stop before business features and w
 [DONE] Project setup
 [DONE] Database setup
 [DONE] Frontend setup cleanup and README
-[TODO] Stock storage
+[DONE] Stock storage
 [TODO] Historical price storage and API
 [TODO] One-time historical data import through 2026-09-20
 [TODO] Quant provider interface and deterministic mock
