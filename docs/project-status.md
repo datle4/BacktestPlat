@@ -13,6 +13,8 @@ Phase 1 is complete. Stop here until the user explicitly requests Phase 2.
 [DONE] Basic historical market data frontend
 [DONE] Three-page UI redesign, Inter typography and stock search/sort
 [DONE] Sci-fi dark and light gradient color themes
+[DONE] Compact Light/Dark dropdown, dark background grid removal and homepage copy
+[DONE] Interactive candlestick history with 1D/1W/1M/1Y, volume, crosshair and pan/zoom
 [DONE] Frontend backtest draft workspace (local save only)
 [TODO] Quant provider interface and deterministic mock
 [TODO] Order execution and portfolio

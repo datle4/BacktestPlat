@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { getPriceSeries } from '@/api/marketData'
-import { PriceChart } from '@/components/PriceChart'
+import { CandlestickChart } from '@/components/CandlestickChart'
 import { Change, DataState } from '@/components/PageParts'
 import { CUTOFF, START, date, number, compact } from '@/hooks/useMarket'
 
@@ -118,13 +118,17 @@ export function MarketOverview({ initialSymbol }: { initialSymbol: string }) {
             <div className="panel-heading">
               <div>
                 <h3>Lịch sử giá {initialSymbol}</h3>
-                <p>Giá đóng cửa · VND</p>
+                <p>Biểu đồ nến · Giá OHLC</p>
               </div>
               <span className="muted">
                 {date(range.from)} – {date(range.to)}
               </span>
             </div>
-            <PriceChart prices={prices} symbol={initialSymbol} />
+            <CandlestickChart
+              key={`${range.from}-${range.to}`}
+              prices={prices}
+              symbol={initialSymbol}
+            />
           </section>
           <section className="panel price-table-section">
             <div className="panel-heading">

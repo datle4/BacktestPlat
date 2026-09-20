@@ -22,18 +22,8 @@ function ThemeProvider({ children }: PropsWithChildren) {
   const theme = usePreferencesStore((state) => state.theme)
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-color-scheme: dark)')
-
-    const applyTheme = () => {
-      const resolvedTheme = theme === 'system' ? (media.matches ? 'dark' : 'light') : theme
-      document.documentElement.dataset.theme = resolvedTheme
-      document.documentElement.style.colorScheme = resolvedTheme
-    }
-
-    applyTheme()
-    media.addEventListener('change', applyTheme)
-
-    return () => media.removeEventListener('change', applyTheme)
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
   }, [theme])
 
   return children
@@ -48,4 +38,3 @@ export function AppProviders({ children }: PropsWithChildren) {
     </QueryClientProvider>
   )
 }
-

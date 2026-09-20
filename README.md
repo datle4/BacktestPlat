@@ -94,11 +94,12 @@ npm run dev
 
 Mở [http://localhost:5173](http://localhost:5173).
 - `/`: tổng quan nhóm theo dõi, độ rộng, khối lượng, biểu đồ giá và 5 mã giao dịch sôi động.
-- `/stocks`: tìm theo mã/tên, sắp xếp, chọn mã để xem lịch sử theo khoảng ngày và 12 phiên OHLCV gần nhất. Có thể mở trực tiếp `/stocks?symbol=FPT`.
+- `/stocks`: tìm theo mã/tên, sắp xếp, chọn mã để xem biểu đồ nến tương tác theo khoảng ngày, khung 1D / 1W / 1M / 1Y và 12 phiên OHLCV gần nhất. Có thể mở trực tiếp `/stocks?symbol=FPT`.
 - `/backtest`: nhập cổ phiếu, ngày, vốn và phí rồi lưu cấu hình nháp trong trình duyệt. Chưa chạy mô phỏng hoặc tạo kết quả; engine thuộc Phase 2.
 
-Giao diện dùng Inter tự host có ký tự tiếng Việt, hỗ trợ màn hình nhỏ và theme sáng/tối/hệ thống.
+Giao diện dùng Inter tự host có ký tự tiếng Việt, hỗ trợ màn hình nhỏ và hai theme Sáng / Tối. Menu giao diện mở bên dưới nút và lưu lựa chọn trong trình duyệt.
 Hai theme dùng gradient xanh–tím: sáng xanh băng/lavender, tối xanh đen/cyan theo hướng sci-fi.
+Biểu đồ nến dùng TradingView Lightweight Charts: kéo ngang, cuộn/chụm để zoom, đường ngắm OHLC và khối lượng ở ô dưới. Khung là độ dài mỗi nến (ngày/tuần/tháng/năm); nến gộp chỉ dùng các phiên nằm trong khoảng ngày được chọn. Mở rộng ngày bắt đầu để xem nhiều nến năm. Có nút điều hướng và mục “Xem dữ liệu từng nến” hỗ trợ bàn phím. Theme tối giữ gradient và bỏ lớp lưới trang trí.
 Số liệu trang chủ chỉ đại diện nhóm mã có dữ liệu, không phải VN-Index hoặc toàn thị trường;
 thống kê phiên mới nhất chỉ gộp các mã cùng ngày. Không có tin tức hoặc giá trực tiếp.
 Vite chuyển tiếp `/api` tới backend tại `localhost:8080`.
