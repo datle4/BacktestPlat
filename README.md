@@ -55,8 +55,10 @@ cd backend
 
 The backend listens on `http://localhost:8080`. If you run `BackendApplication` from IntelliJ, stop any other backend instance first. Only one process can listen on port 8080.
 
-Existing market endpoints:
+API endpoints:
 
+- `POST /api/backtests` - run and persist a simulation (201 + Location).
+- `GET /api/backtests/{id}` - retrieve the immutable saved result.
 - `GET /api/stocks`
 - `GET /api/stocks/{symbol}`
 - `GET /api/stocks/{symbol}/prices?from=2021-01-01&to=2026-09-20`
@@ -164,6 +166,18 @@ Quant supplies decisions only. The backend owns execution dates, fill prices, qu
 The `mock-cycle-v1` provider emits BUY on session 1 and SELL on session 6, repeating every 10 stored sessions from the selected start. The engine supports one long position with whole shares (lot size 1), all-in purchases and full exits. Fees apply on both sides and are rounded to 2 decimal VND places. Signals on the final session or before a zero-volume session are recorded as unfilled. Open positions are marked at the final close; there is no forced liquidation. Metrics include total return, end-of-day maximum drawdown, fees, realized/unrealized P&L and win rate on completed round trips (null if none). No slippage, taxes, T+ settlement or separate corporate-action processing is simulated.
 
 Phase 2 uses a deterministic mock, clearly labelled as simulation data. Phase 3 will connect the collaborator's Quant implementation through a separate provider adapter. Authentication, user management, Redis, Kafka and microservices are outside this MVP.
+
+### Backtest API
+
+```sh
+curl -X POST http://localhost:8080/api/backtests \
+  -H 'Content-Type: application/json' \
+  -d '{"symbol":"FPT","from":"2026-01-01","to":"2026-09-20","capital":100000000,"feePercent":0.15}'
+```
+
+The response contains `id`, `request`, `dataCutoff`, and `simulation` with `metrics`, daily `equity` and `orders`. Retrieve the same snapshot with `GET /api/backtests/{id}`. Each successful POST creates a new run; GET never reruns it. The database retains results across restarts. This local MVP has no authentication or automatic run deletion.
+
+Dates must be between 2021-01-01 and the fixed cutoff, in ascending order, with at least two stored sessions. Capital accepts 1 through 1,000,000,000,000 VND; fees accept 0 through 5% per side, both with at most two decimal places. Validation errors return ProblemDetail (400), unknown stocks/results return 404, insufficient history returns 422, and database outages return 503.
 
 ## Historical data scope
 
