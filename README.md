@@ -161,6 +161,8 @@ Historical OHLCV -> Quant provider -> BUY / SELL / HOLD
 
 Quant supplies decisions only. The backend owns execution dates, fill prices, quantities, fees, cash and positions. A signal generated after session T may execute only at the OPEN of the next available session in the stored data. Stock/date uniqueness is enforced in the database.
 
+The `mock-cycle-v1` provider emits BUY on session 1 and SELL on session 6, repeating every 10 stored sessions from the selected start. The engine supports one long position with whole shares (lot size 1), all-in purchases and full exits. Fees apply on both sides and are rounded to 2 decimal VND places. Signals on the final session or before a zero-volume session are recorded as unfilled. Open positions are marked at the final close; there is no forced liquidation. Metrics include total return, end-of-day maximum drawdown, fees, realized/unrealized P&L and win rate on completed round trips (null if none). No slippage, taxes, T+ settlement or separate corporate-action processing is simulated.
+
 Phase 2 uses a deterministic mock, clearly labelled as simulation data. Phase 3 will connect the collaborator's Quant implementation through a separate provider adapter. Authentication, user management, Redis, Kafka and microservices are outside this MVP.
 
 ## Historical data scope

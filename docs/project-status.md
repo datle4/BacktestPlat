@@ -17,9 +17,9 @@ Phase 1 is complete. Phase 2 was explicitly authorized on 2026-09-20 and is now 
 [DONE] Interactive candlestick history with 1D/1W/1M/1Y, volume, crosshair and pan/zoom
 [DONE] Frontend backtest draft workspace (local save only)
 [DONE] Quant provider interface and deterministic mock
-[IN PROGRESS] Order execution and portfolio
-[TODO] Backtest engine and performance metrics
-[TODO] Backtest result API
+[DONE] Order execution and portfolio
+[DONE] Backtest engine and performance metrics
+[IN PROGRESS] Backtest result API
 [TODO] Connect frontend backtest form to simulation API
 [TODO] Result dashboard and equity curve
 [TODO] Trade history

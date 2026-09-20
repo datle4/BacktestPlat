@@ -136,3 +136,14 @@ Branch: `feature/mock-quant-provider`
 - Signals contain no execution, sizing or accounting logic. Real Quant remains Phase 3.
 - Validation: backend test suite, including deterministic cycles and immutable/ordered history tests.
 - Added a private PDF walkthrough after completion; its sources and output are ignored.
+
+## Backtest execution and accounting
+
+Branch: `feature/backtest-engine`
+
+- Added chronological next-stored-open execution, long-only whole-share portfolio and decimal fee accounting. Cash never goes negative; affordability includes rounded fees.
+- Added daily equity/drawdown, total return, realized/unrealized P&L, completed round trips and nullable win rate. Open positions are marked at the last close.
+- Unfilled signals are explicit events (zero volume, insufficient cash, duplicate position, no position or no next session).
+- Validation: 19 backend tests, including a hand-calculated fee/drawdown example, history-prefix checks and rounding boundaries.
+- Limitations: lot size 1; no slippage, taxes, T+ settlement, partial fills or separate corporate-action processing.
+- Private PDF extended with the implementation and arithmetic walkthrough.
