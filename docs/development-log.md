@@ -167,3 +167,13 @@ Branch: `feature/backtest-results-ui`
 - Validation: lint, 11 Vitest tests, production build, and 32 Playwright checks across four viewports, both themes and axe. The backend API also passed all 22 tests against Docker PostgreSQL.
 - A theme-transition timing issue in the accessibility test was resolved by awaiting active animations before measuring contrast.
 - Private PDF extended with React Query flow, components and chart/table interactions.
+
+## Docker application stack
+
+Branch: `feature/docker-application-stack`
+
+- Added a multi-stage Java 21 backend image running as a non-root user and an optional Compose `app` profile with backend/frontend health dependencies.
+- Docker frontend uses localhost:8088, API localhost:8081; existing IntelliJ :8080 and Vite :5173 are unaffected. PostgreSQL volume is preserved; container logs are rotated.
+- Updated English README with full-stack startup, non-web one-off import and storage/lifecycle notes.
+- Validation: Compose config, production image builds and all three services healthy; Maven verify passed.
+- Private PDF now explains images, service DNS, ports, volume and importer lifecycle.
