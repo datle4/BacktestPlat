@@ -55,3 +55,12 @@ Branch: `feature/historical-price-storage`
 - The composite unique index supports the main access pattern: one stock over a date range.
 - Repository import is idempotent and tests cover replacement of an existing session and chronological range reads.
 - Limitation: the import feature is single-process; database constraints remain the final integrity guard.
+
+## Historical price API
+Branch: `feature/historical-price-api`
+
+- Added `GET /api/stocks/{symbol}/prices?from=YYYY-MM-DD&to=YYYY-MM-DD` with an inclusive date range.
+- Responses include the fixed data cutoff and chronological OHLCV points for the frontend.
+- Added RFC 9457-style problem responses for unknown symbols, invalid dates and requests beyond the cutoff.
+- Tests cover a successful series, reversed ranges and dates after 2026-09-20.
+- Limitation: the endpoint returns an empty series when a known stock has no observations in the range.

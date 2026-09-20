@@ -6,5 +6,5 @@ spring:
   flyway:
     enabled: true
 app:
-  market:
-    scheduled: false
+  market-data:
+    cutoff: 2026-09-20
