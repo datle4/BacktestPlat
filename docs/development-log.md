@@ -46,3 +46,12 @@ Branch: `feature/stock-storage`
 - Used a sequential bigint identity key and an exact unique constraint for predictable inserts and lookups.
 - Tests cover idempotent metadata upsert, normalization and stable symbol ordering.
 - Limitation: stocks are created by the historical importer in the next feature; no public write endpoint is exposed.
+
+## Historical price storage
+Branch: `feature/historical-price-storage`
+
+- Added daily OHLCV storage using exact numeric prices and a bigint volume.
+- Enforced one row per stock and trading session with `(stock_id, trading_date)`, plus price-range and non-negative checks.
+- The composite unique index supports the main access pattern: one stock over a date range.
+- Repository import is idempotent and tests cover replacement of an existing session and chronological range reads.
+- Limitation: the import feature is single-process; database constraints remain the final integrity guard.
