@@ -10,10 +10,48 @@ services:
       - "127.0.0.1:${DB_PORT:-55432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d backtestplat']
       interval: 5s
       timeout: 3s
       retries: 10
+  backend:
+    profiles: [app]
+    build: ./backend
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/backtestplat
+      DB_USER: ${DB_USER:-backtestplat}
+      DB_PASSWORD: ${DB_PASSWORD:-local-backtestplat}
+      MARKET_DATA_IMPORT_ENABLED: "false"
+      MARKET_DATA_IMPORT_START: "2021-01-01"
+      MARKET_DATA_CUTOFF: "2026-09-20"
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8081}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+  frontend:
+    profiles: [app]
+    build: ./frontend
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-8088}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 volumes:
   postgres-data:

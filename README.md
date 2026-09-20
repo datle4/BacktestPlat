@@ -17,7 +17,7 @@ A stock strategy backtesting workspace built around historical OHLCV data and re
 ```text
 backend/       Spring Boot APIs, market data, Java importer and backtesting
 frontend/      Market overview, stocks and backtest workspace
-compose.yaml   Local PostgreSQL service and persistent data volume
+compose.yaml   PostgreSQL plus optional backend/frontend application profile
 .env.example   Example local configuration
 docs/          Project status, development log and Git workflow
 ```
@@ -68,7 +68,7 @@ API endpoints:
 The Java importer uses `yfinance4j` and Yahoo Finance to load 15 HOSE stocks (provider symbols end in `.VN`) into Docker PostgreSQL. With the database running, export the environment as above, then run from `backend/`:
 
 ```sh
-MARKET_DATA_IMPORT_ENABLED=true ./mvnw --batch-mode --no-transfer-progress spring-boot:run
+SPRING_MAIN_WEB_APPLICATION_TYPE=none MARKET_DATA_IMPORT_ENABLED=true ./mvnw --batch-mode --no-transfer-progress spring-boot:run
 ```
 
 The process exits when finished. The default range is `2021-01-01` through the fixed inclusive cutoff `2026-09-20`. The cutoff does not advance with the date of execution. Rows are upserted by stock and trading date, so reruns are idempotent. Incomplete or inconsistent OHLCV rows are logged and skipped; no replacement data is invented.
@@ -97,6 +97,35 @@ Homepage statistics describe the stored watchlist, not the VN-Index or the entir
 
 Vite forwards `/api` to `localhost:8080`. No frontend API key is required.
 
+## Full application with Docker
+
+To run all three services without a local JDK or Node.js installation:
+
+```sh
+docker compose --profile app up -d --build --wait
+```
+
+Open [http://localhost:8088](http://localhost:8088). The backend is also available on `localhost:8081`. These ports avoid IntelliJ on 8080 and Vite on 5173. Nginx forwards `/api/` internally to `backend:8080`, and the backend connects to `db:5432`. The existing PostgreSQL volume and its imported snapshot are reused.
+
+For a fresh database, import the historical snapshot once after building:
+
+```sh
+docker compose --profile app run --rm --no-deps \
+  -e MARKET_DATA_IMPORT_ENABLED=true -e SPRING_MAIN_WEB_APPLICATION_TYPE=none backend
+```
+
+This one-off container imports data and exits; it does not publish an HTTP port or enable a scheduler. Then reload the website.
+
+```sh
+docker compose --profile app ps
+docker compose --profile app logs --tail=100 backend
+docker compose --profile app stop frontend backend
+# Stop the complete stack while retaining its data volume:
+docker compose --profile app down
+```
+
+Plain `docker compose up -d db` remains the database-only development workflow. Docker application images are much larger than the price dataset. Container logs rotate at 10 MB with three files per service. Saved backtest reports consume database space only when you explicitly run simulations; there is no background ingestion or automatic report generation. No automatic report retention/deletion is configured.
+
 ## Environment variables
 
 | Variable | Local default | Purpose |
@@ -104,6 +133,8 @@ Vite forwards `/api` to `localhost:8080`. No frontend API key is required.
 | `DB_USER` | `backtestplat` | PostgreSQL username |
 | `DB_PASSWORD` | `local-backtestplat` | Local development password |
 | `DB_PORT` | `55432` | Database port published on the host |
+| `BACKEND_PORT` | `8081` | Host backend port for the Docker app profile |
+| `FRONTEND_PORT` | `8088` | Host frontend port for the Docker app profile |
 | `DB_URL` | `jdbc:postgresql://localhost:55432/backtestplat` | Backend JDBC URL |
 | `PORT` | `8080` | Backend HTTP port |
 | `MARKET_DATA_IMPORT_ENABLED` | `false` | Run the one-time importer and exit |
