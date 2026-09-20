@@ -14,9 +14,19 @@ import org.springframework.stereotype.Service;
 public class HistoricalDataImportService {
     private static final Logger log = LoggerFactory.getLogger(HistoricalDataImportService.class);
     private static final List<StockSource> SOURCES = List.of(
+            new StockSource("ACB", "Asia Commercial Bank", "HOSE", "ACB.VN"),
             new StockSource("FPT", "FPT Corporation", "HOSE", "FPT.VN"),
+            new StockSource("GAS", "PV Gas", "HOSE", "GAS.VN"),
             new StockSource("HPG", "Hoa Phat Group", "HOSE", "HPG.VN"),
+            new StockSource("MBB", "Military Commercial Bank", "HOSE", "MBB.VN"),
+            new StockSource("MSN", "Masan Group", "HOSE", "MSN.VN"),
+            new StockSource("MWG", "Mobile World Investment", "HOSE", "MWG.VN"),
+            new StockSource("PLX", "Petrolimex", "HOSE", "PLX.VN"),
+            new StockSource("PNJ", "Phu Nhuan Jewelry", "HOSE", "PNJ.VN"),
+            new StockSource("SSI", "SSI Securities", "HOSE", "SSI.VN"),
             new StockSource("TCB", "Techcombank", "HOSE", "TCB.VN"),
+            new StockSource("VCB", "Vietcombank", "HOSE", "VCB.VN"),
+            new StockSource("VHM", "Vinhomes", "HOSE", "VHM.VN"),
             new StockSource("VIC", "Vingroup", "HOSE", "VIC.VN"),
             new StockSource("VNM", "Vinamilk", "HOSE", "VNM.VN"));
 

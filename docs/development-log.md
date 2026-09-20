@@ -92,3 +92,12 @@ Branch: `feature/multipage-market-ui`
 - Market statistics aggregate matching latest dates only and explicitly describe the tracked subset. The activity list shows five leaders. No news, index values or returns are fabricated.
 - Backtest saves draft settings locally; execution, results and Quant remain outside this change and await Phase 2.
 - Validation: frontend lint, six Vitest checks, production build and eight Playwright checks at 375/768/1024/1440px. Browser checks cover all routes in both themes, accessibility, horizontal overflow, reduced motion, draft restoration, deep links and data-error recovery. Visually reviewed desktop/mobile captures and corrected low contrast and table overflow.
+
+## Expanded historical stock universe
+Branch: `feature/expanded-stock-universe`
+
+- Added ACB, GAS, MBB, MSN, MWG, PLX, PNJ, SSI, VCB and VHM to the existing five stocks. The Java importer remains the only ingestion path; no scheduler or startup refresh was added.
+- Kept the historical start at 2021-01-01 and fixed cutoff at 2026-09-20. Existing APIs and the dynamic directory expose all 15 symbols without hardcoded frontend metadata.
+- Validation: Maven verify, 11 passing tests including the complete 15-symbol catalog, provider suffix/range validation, duplicate-free catalog and idempotent reruns. Ran the actual importer against PostgreSQL Docker and inspected the three-page UI with real data.
+- Result: 22,296 price rows, all 15 symbols populated through 2026-09-18, zero rows beyond cutoff, 3,384 kB for the price table and indexes. The import logged and skipped 15 inconsistent provider rows; no replacements were invented.
+- Limitation: Yahoo coverage and adjusted historical prices depend on the source. This is a tracked subset, not complete exchange coverage.
